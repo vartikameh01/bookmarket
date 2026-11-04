@@ -1,0 +1,28 @@
+{
+  "name": "book-marketplace",
+  "version": "1.0.0",
+  "description": "Online book marketplace, B.Tech CSE major project",
+  "scripts": {
+    "dev": "nodemon --watch server --watch public/js/shared server/server.js",
+    "start": "node server/server.js",
+    "seed": "node server/db/seed.js"
+  },
+  "author": "Vartika Mehrotra",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "private": true,
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-mongo": "^6.0.0",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.11.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
