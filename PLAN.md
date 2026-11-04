@@ -155,6 +155,8 @@ ecommerce/
 │   ├── server.js           # connects to mongodb, then starts the app
 │   ├── db/
 │   │   ├── connect.js      # mongoose.connect(process.env.MONGODB_URI)
+│   │   ├── fetch-seed-books.js  # one off: isbn list to seed-books.json via open library
+│   │   ├── seed-books.json
 │   │   └── seed.js         # genres, ~60 real books, 4 demo sellers, ~100 listings, demo buyer, a few delivered + rated orders
 │   ├── models/
 │   │   ├── User.js
@@ -178,6 +180,7 @@ ecommerce/
 │       └── openLibrary.js
 └── public/                 # served statically by express
     ├── index.html
+    ├── 404.html
     ├── catalog.html
     ├── book.html           # book.html?id=<bookId>
     ├── cart.html
@@ -348,56 +351,107 @@ Base path `/api`. All responses are JSON. Errors are `{ "error": "message" }` or
 
 ---
 
-## 11. Timeline (4 to 15 Nov 2026)
+## 11. Step by step build plan (4 to 15 Nov 2026)
 
-Twelve days. Each block ends with something that works end to end.
+Do the steps in order. Each one ends with a **Check**. Don't move on until it passes, then commit (`git commit -m "Step 7: register and login"`) so there is always a working version to go back to.
 
-### 4 to 5 Nov: setup and data
-- [ ] `npm init`, install Express, mongoose, express-session, connect-mongo, bcryptjs, dotenv, nodemon
-- [ ] Free MongoDB Atlas M0 cluster, database user, allow your IP (and `0.0.0.0/0` later for the host), URI in `.env`
-- [ ] Git repo on GitHub, `.gitignore`, `.env.example`, README
-- [ ] Mongoose models and `seed.js`: genres, ~60 real books (ISBNs confirmed on Open Library), 4 demo sellers, ~100 listings, 1 demo buyer, a few delivered and rated orders so ratings show from the start
-- [ ] Express serves `public/`; `/api/genres` and `/api/books` return data
-- [ ] Base CSS and shared `header.js`
+### Day 1 to 2 (4 to 5 Nov): setup and data
 
-### 6 to 7 Nov: accounts and selling
-- [ ] Register / login / logout with sessions and bcrypt
-- [ ] `isbn.js` checksum + ISBN 10 to 13 conversion
-- [ ] `validate-listing.js` shared validator
-- [ ] `/api/isbn/:isbn` with Open Library lookup, caching, 404 and 503 handling
-- [ ] Sell form with live validation and auto fill
-- [ ] My listings page (view, edit, pause, remove)
+1. [x] **Git repository.** `.gitignore`, `.env.example`, README, this plan, first commit.
+2. [ ] **GitHub remote.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`.
+   **Check:** the repo page on GitHub shows the files.
+3. [ ] **MongoDB Atlas.** Create a free M0 cluster (Mumbai region), a database user, and add your current IP under Network Access. Copy the connection string into `.env` as `MONGODB_URI`, with `bookmarket` as the database name. Put a long random string in `SESSION_SECRET`.
+   **Check:** MongoDB Compass connects with the same URI.
+4. [ ] **npm project.** `npm init -y`, add `"type": "module"`, then `npm install express mongoose express-session connect-mongo bcryptjs dotenv` and `npm install -D nodemon`. Scripts: `"dev": "nodemon server/server.js"`, `"start": "node server/server.js"`, `"seed": "node server/db/seed.js"`.
+   **Check:** `npm install` finishes with no errors and `node_modules` is not shown by `git status`.
+5. [ ] **Server skeleton.** `server/db/connect.js` (calls `mongoose.set('sanitizeFilter', true)` then `mongoose.connect`), `server/app.js` (`express.json()`, `express.static('public')`, `GET /api/health` returns `{ ok: true }`), `server/server.js` (loads dotenv, connects, then listens on `PORT`).
+   **Check:** `npm run dev` logs "connected to MongoDB" and http://localhost:3000/api/health shows `{"ok":true}`.
+6. [ ] **Error handling.** `middleware/errorHandler.js` turns a Mongoose `ValidationError` into `400 { errors: { field: message } }`, a `CastError` into 404, and anything else into `500 { error }` (log the stack). Add a JSON 404 for unknown `/api` routes.
+   **Check:** http://localhost:3000/api/nope returns JSON with status 404.
+7. [ ] **Models.** `User`, `Genre`, `Book`, `Listing`, `Order` exactly as in section 7, including the indexes and the `min`/`max`/`enum` rules on `Listing`.
+   **Check:** the server still starts, and the indexes appear in Atlas after the seed in step 8.
+8. [ ] **Seed data.** Write a one off script `server/db/fetch-seed-books.js` that takes a list of ~60 ISBNs (mix of programming, fiction, Indian authors, exam prep), calls Open Library for each, and writes `server/db/seed-books.json` with title, author, publisher, year, pages and cover URL. Drop any ISBN Open Library doesn't know. Then `seed.js` wipes all collections and inserts ~8 genres, the books, 4 sellers and 1 buyer (all with password `demo1234`), ~100 listings (random seller, condition and price; used ones quantity 1), and 3 delivered orders with ratings (updating each seller's `ratingSum` and `ratingCount`).
+   **Check:** `npm run seed` prints the count of each collection and the data is visible in Atlas. Note down two seeded ISBNs to use in the demo.
+9. [ ] **First API routes.** `GET /api/genres`, and a first version of `GET /api/books` that returns books with at least one active listing, their lowest price and offer count (aggregate `listings` grouped by `bookId`, then `$lookup` the book).
+   **Check:** both URLs show sensible JSON in the browser.
+10. [ ] **Frontend base.** `css/base.css` (reset, colour and spacing variables, fonts), `layout.css` (header, footer, page width), `components.css` (buttons, cards, forms, badges, toasts). `js/ui.js` (`escapeHtml`, `formatPrice`, `toast`), `js/api.js` (fetch wrapper from section 9), `js/header.js` (injects header and footer). `index.html` with an empty main area.
+    **Check:** the home page shows the header and footer with no errors in the console.
 
-### 8 to 9 Nov: browsing
-- [ ] Home page sections from the API
-- [ ] Catalog with search, filters, sort, pagination and URL state
-- [ ] Book page with offers table and seller ratings
+### Day 3 to 4 (6 to 7 Nov): accounts and selling
 
-### 10 to 11 Nov: cart, checkout and orders
-- [ ] Server cart, grouped by seller, header badge
-- [ ] Checkout page with address form and mock payment
-- [ ] `POST /orders` transaction: stock checks, one order per seller
-- [ ] My orders and order detail pages, cancel with restock
+11. [ ] **Auth API.** Sessions with `connect-mongo`, cookie `httpOnly`, `sameSite: 'lax'`, `secure` when `NODE_ENV=production`, and `app.set('trust proxy', 1)` for Render. Register (name, email, password of at least 8 characters, bcrypt cost 10, 409 for an existing email), login (cast inputs with `String()`, compare hash, `req.session.regenerate`, store `userId`), logout, `me`. `middleware/requireAuth.js` returns 401 without a session.
+    **Check:** register, refresh, still logged in. Restart the server, still logged in. Wrong password gives 401.
+12. [ ] **Login and register pages.** Forms with field errors, redirect to `?next=` after success. The header shows the user's name, "Sell a book" and Logout when logged in, and Login / Register when not.
+    **Check:** the whole flow works in the browser, including logout.
+13. [ ] **ISBN helpers.** `public/js/shared/isbn.js`: `normalizeIsbn`, `isValidIsbn10`, `isValidIsbn13`, `toIsbn13`.
+    **Check:** in `node`, `9780131103627` is valid, `9780131103628` is invalid, and `toIsbn13('0131103628')` returns `9780131103627`.
+14. [ ] **Shared validator.** `public/js/shared/validate-listing.js` exports `validateListing(input)` returning `{ value, errors }` with the rules from section 5.
+    **Check:** in `node`, price `5` returns a price error, and condition `good` with quantity `4` returns quantity `1`.
+15. [ ] **ISBN lookup.** `services/openLibrary.js` (fetch with `AbortSignal.timeout(5000)`, returns `null` when the book is missing, throws on network errors) and `routes/isbn.js` (400 bad checksum, cached book from `books`, 404 not found, 503 lookup failed).
+    **Check:** while logged in, open `/api/isbn/9780131103627`, `/api/isbn/9780131103628` and a valid but unknown ISBN in the browser and see 200, 400 and 404.
+16. [ ] **Create listing API.** `POST /api/listings`: requireAuth, run the shared validator, find the book by `isbn13` (it must exist, because the lookup step saved it), set the book's genre if it has none, save the listing.
+    **Check:** from the DevTools console, a `fetch` with price 5 gets 400 with a price error, and a valid body gets 201.
+17. [ ] **Sell form.** `sell.html` and `pages/sell.js`: ISBN field with live checksum, debounced lookup, read only title, author and cover, genre select, condition, price, quantity (hidden for used), notes. Errors under each field linked with `aria-describedby`; submit disabled until valid.
+    **Check:** every item in the validation checklist in section 5 behaves as described.
+18. [ ] **My listings.** `GET /listings/mine`, `PATCH /listings/:id`, `DELETE /listings/:id` (soft delete), all checking the owner. `seller/listings.html` with pause and remove buttons, and `seller/listing-edit.html`.
+    **Check:** editing, pausing and removing all survive a refresh, and patching another seller's listing id returns 404.
 
-### 12 Nov: seller side and ratings
-- [ ] Seller sales page: mark shipped / delivered
-- [ ] Earnings summary
-- [ ] Buyer rating form on delivered orders, average shown on offers
+### Day 5 to 6 (8 to 9 Nov): browsing
 
-### 13 Nov: profile and polish
-- [ ] Profile page: name, saved address (prefills checkout), change password
-- [ ] Loading states, empty states, error toasts, 404 page, mobile check
-- [ ] Walk through the validation checklist (section 5) and the demo script (section 12) by hand and fix what breaks
+19. [ ] **Full catalog API.** `GET /api/books` supports `q` (escaped regex on title and author, or exact `isbn13` when `q` looks like an ISBN), `genre`, `condition`, `min` and `max` in rupees, `sort` (`price_asc`, `price_desc`, `newest`) and `page` (12 per page), returning `{ items, total, page, pages }`. Only listings that are active with quantity above 0 count.
+    **Check:** each filter and sort changes the JSON as expected when typed into the URL.
+20. [ ] **Catalog page.** `catalog.html` with a filter sidebar, a grid of book cards (cover, title, author, "from ₹X", "N offers") and pagination. Filters read from and write to the query string. The header search box submits to `catalog.html?q=`.
+    **Check:** apply filters, go to page 2, press Back, and the previous filters and page come back.
+21. [ ] **Home page.** Recently listed, cheapest used copies, and genre chips, all using `/api/books` with different parameters.
+    **Check:** each section links to the matching catalog view.
+22. [ ] **Book page.** `GET /api/books/:id` returns the book and its active offers sorted by price, with seller name and average rating. `book.html` shows the cover, details and an offers table with condition badges, ratings like ★ 4.5 (12), stock and "Add to cart" (disabled on your own listings, sends you to login when logged out).
+    **Check:** a seeded book with 3 sellers shows 3 rows in price order.
 
-### 14 Nov: deploy
-- [ ] Deploy to Render/Railway, set env vars, allow the host in Atlas network access
-- [ ] Run the seed against the production database
-- [ ] Test the live URL on a phone, run the full demo script on it
+### Day 7 to 8 (10 to 11 Nov): cart, checkout and orders
 
-### 15 Nov: presentation material
-- [ ] Slides (10 to 12) and a 5 minute demo script; rehearse twice
-- [ ] Record a backup demo video in case the internet fails
-- [ ] Screenshots and diagrams for the report
+23. [ ] **Cart API.** `GET /api/cart` loads the listings, drops ones that are no longer active or in stock, groups by seller and adds totals. `PUT /api/cart/:listingId` sets quantity (0 removes, rejects your own listings, caps at stock). `/auth/me` includes the cart count; pages fire `cart:change` after changes so the header badge updates.
+    **Check:** add from the book page and the badge goes up without a reload.
+24. [ ] **Cart page.** `cart.html` grouped by seller, quantity inputs, remove buttons, subtotals, grand total and a Checkout button.
+    **Check:** changing quantities updates totals, and the empty cart shows a friendly message.
+25. [ ] **Checkout page.** `checkout.html`: address form prefilled from the saved address, a "save this address" checkbox, order summary, and a mock card form (16 digits, MM/YY, 3 digit CVV, checked in the browser only).
+    **Check:** invalid card details or a missing pincode block the Pay button.
+26. [ ] **Place order.** `POST /api/orders` runs the transaction from section 7: decrement stock, one order per seller with a shared `checkoutId`, `paymentRef` like `MOCK-8F3K2A`, empty the cart. Out of stock returns 409 with the book's title. Then redirect to `orders.html?checkout=<id>`, which highlights the new orders.
+    **Check:** log in as two buyers in two browsers, both with the last copy in the cart, and pay in both. One succeeds, the other gets the 409 message, and stock in Atlas is 0, not negative.
+27. [ ] **Orders pages.** `orders.html` (newest first, seller, status badge, total) and `order.html` (items, shipping address, status, Cancel button while Placed). `POST /orders/:id/cancel` is a transaction that sets `cancelled` and restocks.
+    **Check:** cancel an order and the listing's quantity goes back up.
+
+### Day 9 (12 Nov): seller side and ratings
+
+28. [ ] **Sales.** `GET /api/sales` (filter by status), `PATCH /api/sales/:orderId` allowing only Placed → Shipped → Delivered. `seller/sales.html` with status tabs, buyer address and the action button.
+    **Check:** marking another seller's order returns 404, and jumping from Placed straight to Delivered returns 400.
+29. [ ] **Earnings summary.** `GET /api/sales/summary` aggregation (earned from delivered, pending from placed and shipped, order count, average rating) shown as cards at the top of the sales page.
+    **Check:** the numbers match the orders listed below them.
+30. [ ] **Ratings.** `POST /api/orders/:id/rating` takes 1 to 5 stars and a comment of up to 300 characters, only for the buyer's own delivered and unrated order, and `$inc`s the seller's `ratingSum` and `ratingCount`. Star form on `order.html`.
+    **Check:** the new rating changes the seller's average on the book page, and rating the same order again returns 409.
+
+### Day 10 (13 Nov): profile and polish
+
+31. [ ] **Profile.** `profile.html`, `PATCH /api/profile` (name, address), `POST /api/profile/password` (needs the current password).
+    **Check:** a wrong current password is rejected, and the new password works after logging out.
+32. [ ] **Polish pass.** Loading spinners, empty states (cart, orders, listings, sales, no search results), error toasts, `404.html`, visible focus outlines, `alt` text, and every page at 375 px wide in DevTools device mode.
+    **Check:** nothing overflows sideways on the phone sized view.
+33. [ ] **Full manual walkthrough.** Run the validation checklist (section 5), the demo script (section 12) and these security spot checks: login with `{"email":{"$ne":null},"password":"x"}` is rejected, editing someone else's listing gives 404, adding your own listing to the cart is rejected, and a price sent in the checkout body is ignored.
+    **Check:** everything passes; fix and recheck anything that doesn't.
+
+### Day 11 (14 Nov): deploy
+
+34. [ ] **Render.** New Web Service from the GitHub repo, build `npm install`, start `npm start`, Node 22, environment variables `MONGODB_URI`, `SESSION_SECRET`, `NODE_ENV=production`. In Atlas Network Access, add `0.0.0.0/0`.
+    **Check:** the live URL loads, and login survives a refresh (this proves the secure cookie and `trust proxy` are right).
+35. [ ] **Live test.** Run `npm run seed` for a clean state, then go through the whole demo script on a phone using the live URL.
+    **Check:** the demo works start to finish on the phone.
+
+### Day 12 (15 Nov): presentation material
+
+36. [ ] **Report material.** Screenshots of every page, the architecture diagram and the data model diagram (draw.io).
+37. [ ] **Slides.** 12 slides following section 13.
+38. [ ] **Rehearse.** Run the demo twice with a timer, then record a backup video with QuickTime screen recording.
+39. [ ] **Wrap up.** Update the README changelog, run `npm run seed` one last time, and tag the release with `git tag v1.0 && git push --tags`.
+    **Check:** everything in section 4 works on the live URL.
 
 ---
 
