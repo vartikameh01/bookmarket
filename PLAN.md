@@ -358,8 +358,7 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 ### Day 1 to 2 (4 to 5 Nov): setup and data
 
 1. [x] **Git repository.** `.gitignore`, `.env.example`, README, this plan, first commit.
-2. [ ] **GitHub remote.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`.
-   **Check:** the repo page on GitHub shows the files.
+2. [ ] **GitHub remote.** Deferred to step 34, since nothing needs it before deploying.
 3. [ ] **MongoDB Atlas.** Create a free M0 cluster (Mumbai region), a database user, and add your current IP under Network Access. Copy the connection string into `.env` as `MONGODB_URI`, with `bookmarket` as the database name. Put a long random string in `SESSION_SECRET`.
    **Check:** MongoDB Compass connects with the same URI.
 4. [ ] **npm project.** `npm init -y`, add `"type": "module"`, then `npm install express mongoose express-session connect-mongo bcryptjs dotenv` and `npm install -D nodemon`. Scripts: `"dev": "nodemon server/server.js"`, `"start": "node server/server.js"`, `"seed": "node server/db/seed.js"`.
@@ -440,7 +439,7 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 
 ### Day 11 (14 Nov): deploy
 
-34. [ ] **Render.** New Web Service from the GitHub repo, build `npm install`, start `npm start`, Node 22, environment variables `MONGODB_URI`, `SESSION_SECRET`, `NODE_ENV=production`. In Atlas Network Access, add `0.0.0.0/0`.
+34. [ ] **GitHub and Render.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`. Then on Render, New Web Service from that repo, build `npm install`, start `npm start`, Node 22, environment variables `MONGODB_URI`, `SESSION_SECRET`, `NODE_ENV=production`. In Atlas Network Access, add `0.0.0.0/0`.
     **Check:** the live URL loads, and login survives a refresh (this proves the secure cookie and `trust proxy` are right).
 35. [ ] **Live test.** Run `npm run seed` for a clean state, then go through the whole demo script on a phone using the live URL.
     **Check:** the demo works start to finish on the phone.
