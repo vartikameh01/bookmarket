@@ -8,11 +8,12 @@ See [PLAN.md](PLAN.md) for the full design, API and timeline.
 
 ## Running locally
 
-1. Install Node.js 22 or newer.
-2. Copy `.env.example` to `.env` and fill in the MongoDB Atlas URI and a session secret.
-3. `npm install`
-4. `npm run seed`
-5. `npm run dev` and open http://localhost:3000
+1. Install Node.js 22 or newer and Docker.
+2. `docker compose up -d --wait` to start the local MongoDB.
+3. Copy `.env.example` to `.env` and set a session secret.
+4. `npm install`
+5. `npm run seed`
+6. `npm run dev` and open http://localhost:3000
 
 ## Changelog
 

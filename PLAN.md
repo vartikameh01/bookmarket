@@ -1,7 +1,7 @@
 # Online Book Marketplace: Project Plan
 
 B.Tech CSE Final Year Major Project (application based)
-Stack: vanilla HTML + CSS + JavaScript frontend, Node.js + Express backend, MongoDB (Atlas) with Mongoose
+Stack: vanilla HTML + CSS + JavaScript frontend, Node.js + Express backend, MongoDB with Mongoose (local Docker for development, Atlas when deployed)
 Plan date: 4 Nov 2026 · Target: everything built, deployed and rehearsed by **15 Nov 2026**
 
 ---
@@ -19,7 +19,7 @@ Plan date: 4 Nov 2026 · Target: everything built, deployed and rehearsed by **1
 | Photos | No photo upload. Books show the Open Library cover. |
 | Search | One search box over title, author and ISBN using an escaped regex. No live suggestion dropdown. |
 | Payment | Mock payment form. No real money moves; sellers see sales and earnings on their dashboard. |
-| Database | MongoDB Atlas free tier (M0) with Mongoose. Atlas runs as a replica set, which multi document transactions need. |
+| Database | Development uses a local MongoDB 8 in Docker, run as a single node replica set. The deployed app uses MongoDB Atlas free tier (M0), set up on deploy day. Both are replica sets, which multi document transactions need. |
 | Extras in scope | Seller rating (buyer rates an order after delivery) and a profile page (name, saved address, change password). |
 | Not in scope | Admin page, wishlist, dark mode, photo upload, rate limiting, automated tests. |
 
@@ -53,7 +53,7 @@ The frontend uses no frameworks (no React, no Bootstrap, no jQuery), to show und
 |---|---|---|
 | Frontend | HTML5, CSS3, vanilla JS (ES modules) | College requirement; no build step needed |
 | Backend | Node.js 22+ and Express 5, `"type": "module"` | Requirement; ES modules let the server share the validator file with the browser |
-| Database | MongoDB Atlas (free M0 cluster) | Hosted, so the data survives redeploys; free; supports transactions |
+| Database | MongoDB 8 in Docker locally, MongoDB Atlas (free M0) when deployed | Local needs no account or internet; Atlas is hosted so data survives redeploys; both support transactions |
 | ODM | Mongoose | Schemas with built in validators (required, min/max, enum), which become a second line of listing validation |
 | Sessions store | `connect-mongo` | Keeps login sessions in MongoDB so users stay logged in across server restarts |
 | Auth | `express-session` + `bcryptjs` | httpOnly session cookie is simpler and safer than a JWT in localStorage |
@@ -150,6 +150,7 @@ The Mongoose `Listing` schema repeats the core rules (`required`, `min`, `max`, 
 ecommerce/
 ├── package.json            # "type": "module"
 ├── .env.example            # PORT, SESSION_SECRET, MONGODB_URI
+├── docker-compose.yml      # local mongodb 8 as a single node replica set
 ├── server/
 │   ├── app.js              # express app, middleware, routes mounted
 │   ├── server.js           # connects to mongodb, then starts the app
@@ -359,8 +360,8 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 
 1. [x] **Git repository.** `.gitignore`, `.env.example`, README, this plan, first commit.
 2. [ ] **GitHub remote.** Deferred to step 34, since nothing needs it before deploying.
-3. [ ] **MongoDB Atlas.** Create a free M0 cluster (Mumbai region), a database user, and add your current IP under Network Access. Copy the connection string into `.env` as `MONGODB_URI`, with `bookmarket` as the database name. Put a long random string in `SESSION_SECRET`.
-   **Check:** MongoDB Compass connects with the same URI.
+3. [x] **Local MongoDB.** `docker-compose.yml` runs MongoDB 8 as a single node replica set (`rs0`) with a named volume, and initiates the set on first start. `docker compose up -d --wait` starts it, `docker compose down` stops it (data is kept). Copy `.env.example` to `.env`; its default `MONGODB_URI` points at this container. Put a long random string in `SESSION_SECRET`. Atlas is deferred to step 34.
+   **Check:** `docker compose exec mongo mongosh --eval 'rs.status().members[0].stateStr'` prints `PRIMARY`.
 4. [ ] **npm project.** `npm init -y`, add `"type": "module"`, then `npm install express mongoose express-session connect-mongo bcryptjs dotenv` and `npm install -D nodemon`. Scripts: `"dev": "nodemon server/server.js"`, `"start": "node server/server.js"`, `"seed": "node server/db/seed.js"`.
    **Check:** `npm install` finishes with no errors and `node_modules` is not shown by `git status`.
 5. [ ] **Server skeleton.** `server/db/connect.js` (calls `mongoose.set('sanitizeFilter', true)` then `mongoose.connect`), `server/app.js` (`express.json()`, `express.static('public')`, `GET /api/health` returns `{ ok: true }`), `server/server.js` (loads dotenv, connects, then listens on `PORT`).
@@ -368,9 +369,9 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 6. [ ] **Error handling.** `middleware/errorHandler.js` turns a Mongoose `ValidationError` into `400 { errors: { field: message } }`, a `CastError` into 404, and anything else into `500 { error }` (log the stack). Add a JSON 404 for unknown `/api` routes.
    **Check:** http://localhost:3000/api/nope returns JSON with status 404.
 7. [ ] **Models.** `User`, `Genre`, `Book`, `Listing`, `Order` exactly as in section 7, including the indexes and the `min`/`max`/`enum` rules on `Listing`.
-   **Check:** the server still starts, and the indexes appear in Atlas after the seed in step 8.
+   **Check:** the server still starts, and the indexes appear (`db.listings.getIndexes()` in mongosh) after the seed in step 8.
 8. [ ] **Seed data.** Write a one off script `server/db/fetch-seed-books.js` that takes a list of ~60 ISBNs (mix of programming, fiction, Indian authors, exam prep), calls Open Library for each, and writes `server/db/seed-books.json` with title, author, publisher, year, pages and cover URL. Drop any ISBN Open Library doesn't know. Then `seed.js` wipes all collections and inserts ~8 genres, the books, 4 sellers and 1 buyer (all with password `demo1234`), ~100 listings (random seller, condition and price; used ones quantity 1), and 3 delivered orders with ratings (updating each seller's `ratingSum` and `ratingCount`).
-   **Check:** `npm run seed` prints the count of each collection and the data is visible in Atlas. Note down two seeded ISBNs to use in the demo.
+   **Check:** `npm run seed` prints the count of each collection and the data is visible in mongosh or MongoDB Compass (`mongodb://localhost:27017/?directConnection=true`). Note down two seeded ISBNs to use in the demo.
 9. [ ] **First API routes.** `GET /api/genres`, and a first version of `GET /api/books` that returns books with at least one active listing, their lowest price and offer count (aggregate `listings` grouped by `bookId`, then `$lookup` the book).
    **Check:** both URLs show sensible JSON in the browser.
 10. [ ] **Frontend base.** `css/base.css` (reset, colour and spacing variables, fonts), `layout.css` (header, footer, page width), `components.css` (buttons, cards, forms, badges, toasts). `js/ui.js` (`escapeHtml`, `formatPrice`, `toast`), `js/api.js` (fetch wrapper from section 9), `js/header.js` (injects header and footer). `index.html` with an empty main area.
@@ -415,7 +416,7 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 25. [ ] **Checkout page.** `checkout.html`: address form prefilled from the saved address, a "save this address" checkbox, order summary, and a mock card form (16 digits, MM/YY, 3 digit CVV, checked in the browser only).
     **Check:** invalid card details or a missing pincode block the Pay button.
 26. [ ] **Place order.** `POST /api/orders` runs the transaction from section 7: decrement stock, one order per seller with a shared `checkoutId`, `paymentRef` like `MOCK-8F3K2A`, empty the cart. Out of stock returns 409 with the book's title. Then redirect to `orders.html?checkout=<id>`, which highlights the new orders.
-    **Check:** log in as two buyers in two browsers, both with the last copy in the cart, and pay in both. One succeeds, the other gets the 409 message, and stock in Atlas is 0, not negative.
+    **Check:** log in as two buyers in two browsers, both with the last copy in the cart, and pay in both. One succeeds, the other gets the 409 message, and stock in the database is 0, not negative.
 27. [ ] **Orders pages.** `orders.html` (newest first, seller, status badge, total) and `order.html` (items, shipping address, status, Cancel button while Placed). `POST /orders/:id/cancel` is a transaction that sets `cancelled` and restocks.
     **Check:** cancel an order and the listing's quantity goes back up.
 
@@ -439,9 +440,9 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 
 ### Day 11 (14 Nov): deploy
 
-34. [ ] **GitHub and Render.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`. Then on Render, New Web Service from that repo, build `npm install`, start `npm start`, Node 22, environment variables `MONGODB_URI`, `SESSION_SECRET`, `NODE_ENV=production`. In Atlas Network Access, add `0.0.0.0/0`.
+34. [ ] **GitHub and Render.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`. Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New Web Service from that repo, build `npm install`, start `npm start`, Node 22, environment variables `MONGODB_URI` (the Atlas one), `SESSION_SECRET`, `NODE_ENV=production`.
     **Check:** the live URL loads, and login survives a refresh (this proves the secure cookie and `trust proxy` are right).
-35. [ ] **Live test.** Run `npm run seed` for a clean state, then go through the whole demo script on a phone using the live URL.
+35. [ ] **Live test.** Seed Atlas with `MONGODB_URI='<atlas uri>' npm run seed`, then go through the whole demo script on a phone using the live URL.
     **Check:** the demo works start to finish on the phone.
 
 ### Day 12 (15 Nov): presentation material
@@ -449,7 +450,7 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 36. [ ] **Report material.** Screenshots of every page, the architecture diagram and the data model diagram (draw.io).
 37. [ ] **Slides.** 12 slides following section 13.
 38. [ ] **Rehearse.** Run the demo twice with a timer, then record a backup video with QuickTime screen recording.
-39. [ ] **Wrap up.** Update the README changelog, run `npm run seed` one last time, and tag the release with `git tag v1.0 && git push --tags`.
+39. [ ] **Wrap up.** Update the README changelog, reseed Atlas one last time, and tag the release with `git tag v1.0 && git push --tags`.
     **Check:** everything in section 4 works on the live URL.
 
 ---
@@ -491,8 +492,9 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 | Falling behind schedule | Ratings and profile page are cut first; everything else is the core flow |
 | Open Library is slow or down during the demo | Unknown ISBNs can't be listed while it's down, so the demo uses an ISBN already cached in `books`; the lookup then answers instantly from our database. Keep a second cached ISBN as backup. |
 | A real Indian edition isn't on Open Library | Expected and accepted for this scope; manual entry is listed as future scope |
-| College or venue Wi-Fi blocks MongoDB's port 27017 | Test from campus early; keep a phone hotspot ready; as a last resort run a local `mongod` started as a single node replica set (`mongod --replSet rs0` then `rs.initiate()`) so transactions still work |
-| Transactions fail on a plain local MongoDB | Always develop against Atlas, or the single node replica set above; a standalone `mongod` does not support transactions |
+| College or venue Wi-Fi blocks MongoDB's port 27017 | The deployed app talks to Atlas from Render's servers, so venue Wi-Fi doesn't matter for it. If running on the laptop, use the local Docker database, which needs no internet for data. |
+| Transactions fail on a plain MongoDB | Only ever use the Docker replica set or Atlas; a standalone `mongod` does not support transactions |
+| Local and deployed data drift apart | Both are filled by the same `npm run seed`, so reseed whichever one is being demoed |
 | Free host sleeps when idle (Render takes ~50 s to wake) | Open the live URL a couple of minutes before presenting |
 | Internet or hosting down on presentation day | Run locally on the laptop and keep the recorded video as backup |
 | Supervisor asks for changes | Weekly meetings catch this early; keep a changelog in the README |
