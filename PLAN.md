@@ -391,7 +391,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
     **Check:** in `node`, price `5` returns a price error, and condition `good` with quantity `4` returns quantity `1`.
 15. [x] **ISBN lookup.** `services/openLibrary.js` already exists from step 8 (one 10 second timeout for the whole lookup, returns `null` when the book is missing, throws on network errors). Add `routes/isbn.js` (400 bad checksum, cached book from `books`, 404 not found, 503 lookup failed).
     **Check:** while logged in, open `/api/isbn/9780131103627`, `/api/isbn/9780131103628` and a valid but unknown ISBN in the browser and see 200, 400 and 404.
-16. [ ] **Create listing API.** `POST /api/listings`: requireAuth, run the shared validator, find the book by `isbn13` (it must exist, because the lookup step saved it), set the book's genre if it has none, save the listing.
+16. [x] **Create listing API.** `POST /api/listings`: requireAuth, run the shared validator, find the book by `isbn13` (it must exist, because the lookup step saved it), set the book's genre if it has none, save the listing.
     **Check:** from the DevTools console, a `fetch` with price 5 gets 400 with a price error, and a valid body gets 201.
 17. [ ] **Sell form.** `sell.html` and `pages/sell.js`: ISBN field with live checksum, debounced lookup, read only title, author and cover, genre select, condition, price, quantity (hidden for used), notes. Errors under each field linked with `aria-describedby`; submit disabled until valid.
     **Check:** every item in the validation checklist in section 5 behaves as described.
