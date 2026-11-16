@@ -2,7 +2,7 @@
 
 B.Tech CSE Final Year Major Project (application based)
 Stack: vanilla HTML + CSS + JavaScript frontend, Node.js + Express backend, MongoDB with Mongoose (local Docker for development, Atlas when deployed)
-Plan date: 4 Nov 2026 · Target: everything built, deployed and rehearsed by **15 Nov 2026**
+Plan date: 4 Nov 2026, rescheduled 16 Nov 2026 · Target: at least 20% coded by **30 Nov 2026** (college milestone), everything built, deployed and rehearsed by **6 Dec 2026**, final presentation on **7 Dec 2026**
 
 ---
 
@@ -352,11 +352,13 @@ Base path `/api`. All responses are JSON. Errors are `{ "error": "message" }` or
 
 ---
 
-## 11. Step by step build plan (4 to 15 Nov 2026)
+## 11. Step by step build plan (4 Nov to 7 Dec 2026)
 
 Do the steps in order. Each one ends with a **Check**. Don't move on until it passes, then commit (`git commit -m "Step 7: register and login"`) so there is always a working version to go back to.
 
-### Day 1 to 2 (4 to 5 Nov): setup and data
+Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below were redone on 16 Nov against the college deadlines: 20% of the coding by 30 Nov and the final presentation on 7 Dec. The 30 Nov milestone lands after step 27, so the supervisor sees the full buying flow working, well past 20%. If a block runs over, take the time from the 1 Dec buffer day first, then cut ratings and profile (see section 14).
+
+### 4 Nov and 16 to 17 Nov: setup and data
 
 1. [x] **Git repository.** `.gitignore`, `.env.example`, README, this plan, first commit.
 2. [ ] **GitHub remote.** Deferred to step 34, since nothing needs it before deploying.
@@ -377,7 +379,7 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 10. [ ] **Frontend base.** `css/base.css` (reset, colour and spacing variables, fonts), `layout.css` (header, footer, page width), `components.css` (buttons, cards, forms, badges, toasts). `js/ui.js` (`escapeHtml`, `formatPrice`, `toast`), `js/api.js` (fetch wrapper from section 9), `js/header.js` (injects header and footer). `index.html` with an empty main area.
     **Check:** the home page shows the header and footer with no errors in the console.
 
-### Day 3 to 4 (6 to 7 Nov): accounts and selling
+### 18 to 21 Nov: accounts and selling
 
 11. [ ] **Auth API.** Sessions with `connect-mongo`, cookie `httpOnly`, `sameSite: 'lax'`, `secure` when `NODE_ENV=production`, and `app.set('trust proxy', 1)` for Render. Register (name, email, password of at least 8 characters, bcrypt cost 10, 409 for an existing email), login (cast inputs with `String()`, compare hash, `req.session.regenerate`, store `userId`), logout, `me`. `middleware/requireAuth.js` returns 401 without a session.
     **Check:** register, refresh, still logged in. Restart the server, still logged in. Wrong password gives 401.
@@ -396,7 +398,7 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 18. [ ] **My listings.** `GET /listings/mine`, `PATCH /listings/:id`, `DELETE /listings/:id` (soft delete), all checking the owner. `seller/listings.html` with pause and remove buttons, and `seller/listing-edit.html`.
     **Check:** editing, pausing and removing all survive a refresh, and patching another seller's listing id returns 404.
 
-### Day 5 to 6 (8 to 9 Nov): browsing
+### 22 to 24 Nov: browsing
 
 19. [ ] **Full catalog API.** `GET /api/books` supports `q` (escaped regex on title and author, or exact `isbn13` when `q` looks like an ISBN), `genre`, `condition`, `min` and `max` in rupees, `sort` (`price_asc`, `price_desc`, `newest`) and `page` (12 per page), returning `{ items, total, page, pages }`. Only listings that are active with quantity above 0 count.
     **Check:** each filter and sort changes the JSON as expected when typed into the URL.
@@ -407,7 +409,7 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 22. [ ] **Book page.** `GET /api/books/:id` returns the book and its active offers sorted by price, with seller name and average rating. `book.html` shows the cover, details and an offers table with condition badges, ratings like ★ 4.5 (12), stock and "Add to cart" (disabled on your own listings, sends you to login when logged out).
     **Check:** a seeded book with 3 sellers shows 3 rows in price order.
 
-### Day 7 to 8 (10 to 11 Nov): cart, checkout and orders
+### 25 to 28 Nov: cart, checkout and orders
 
 23. [ ] **Cart API.** `GET /api/cart` loads the listings, drops ones that are no longer active or in stock, groups by seller and adds totals. `PUT /api/cart/:listingId` sets quantity (0 removes, rejects your own listings, caps at stock). `/auth/me` includes the cart count; pages fire `cart:change` after changes so the header badge updates.
     **Check:** add from the book page and the badge goes up without a reload.
@@ -420,7 +422,9 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 27. [ ] **Orders pages.** `orders.html` (newest first, seller, status badge, total) and `order.html` (items, shipping address, status, Cancel button while Placed). `POST /orders/:id/cancel` is a transaction that sets `cancelled` and restocks.
     **Check:** cancel an order and the listing's quantity goes back up.
 
-### Day 9 (12 Nov): seller side and ratings
+### 29 to 30 Nov: seller side and ratings
+
+**30 Nov milestone:** the college's 20% deadline. Show the supervisor the buying and selling flow running locally and note their feedback in the weekly progress log.
 
 28. [ ] **Sales.** `GET /api/sales` (filter by status), `PATCH /api/sales/:orderId` allowing only Placed → Shipped → Delivered. `seller/sales.html` with status tabs, buyer address and the action button.
     **Check:** marking another seller's order returns 404, and jumping from Placed straight to Delivered returns 400.
@@ -429,7 +433,11 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 30. [ ] **Ratings.** `POST /api/orders/:id/rating` takes 1 to 5 stars and a comment of up to 300 characters, only for the buyer's own delivered and unrated order, and `$inc`s the seller's `ratingSum` and `ratingCount`. Star form on `order.html`.
     **Check:** the new rating changes the seller's average on the book page, and rating the same order again returns 409.
 
-### Day 10 (13 Nov): profile and polish
+### 1 Dec: buffer
+
+Catch up on anything that slipped and act on the supervisor's feedback from the 30 Nov review. If nothing slipped, start the profile and polish steps early.
+
+### 2 to 3 Dec: profile and polish
 
 31. [ ] **Profile.** `profile.html`, `PATCH /api/profile` (name, address), `POST /api/profile/password` (needs the current password).
     **Check:** a wrong current password is rejected, and the new password works after logging out.
@@ -438,14 +446,16 @@ Do the steps in order. Each one ends with a **Check**. Don't move on until it pa
 33. [ ] **Full manual walkthrough.** Run the validation checklist (section 5), the demo script (section 12) and these security spot checks: login with `{"email":{"$ne":null},"password":"x"}` is rejected, editing someone else's listing gives 404, adding your own listing to the cart is rejected, and a price sent in the checkout body is ignored.
     **Check:** everything passes; fix and recheck anything that doesn't.
 
-### Day 11 (14 Nov): deploy
+### 4 Dec: deploy
 
 34. [ ] **GitHub and Render.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`. Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New Web Service from that repo, build `npm install`, start `npm start`, Node 22, environment variables `MONGODB_URI` (the Atlas one), `SESSION_SECRET`, `NODE_ENV=production`.
     **Check:** the live URL loads, and login survives a refresh (this proves the secure cookie and `trust proxy` are right).
 35. [ ] **Live test.** Seed Atlas with `MONGODB_URI='<atlas uri>' npm run seed`, then go through the whole demo script on a phone using the live URL.
     **Check:** the demo works start to finish on the phone.
 
-### Day 12 (15 Nov): presentation material
+### 5 to 6 Dec: presentation material
+
+The final presentation is on 7 Dec.
 
 36. [ ] **Report material.** Screenshots of every page, the architecture diagram and the data model diagram (draw.io).
 37. [ ] **Slides.** 12 slides following section 13.

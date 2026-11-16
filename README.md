@@ -18,3 +18,4 @@ See [PLAN.md](PLAN.md) for the full design, API and timeline.
 ## Changelog
 
 - 4 Nov 2026: project plan and repository setup.
+- 16 Nov 2026: rescheduled the build plan against the 30 Nov and 7 Dec deadlines.
