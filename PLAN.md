@@ -381,7 +381,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
 
 ### 18 to 21 Nov: accounts and selling
 
-11. [ ] **Auth API.** Sessions with `connect-mongo`, cookie `httpOnly`, `sameSite: 'lax'`, `secure` when `NODE_ENV=production`, and `app.set('trust proxy', 1)` for Render. Register (name, email, password of at least 8 characters, bcrypt cost 10, 409 for an existing email), login (cast inputs with `String()`, compare hash, `req.session.regenerate`, store `userId`), logout, `me`. `middleware/requireAuth.js` returns 401 without a session.
+11. [x] **Auth API.** Sessions with `connect-mongo`, cookie `httpOnly`, `sameSite: 'lax'`, `secure` when `NODE_ENV=production`, and `app.set('trust proxy', 1)` for Render. Register (name, email, password of at least 8 characters, bcrypt cost 10, 409 for an existing email), login (cast inputs with `String()`, compare hash, `req.session.regenerate`, store `userId`), logout, `me`. `middleware/requireAuth.js` returns 401 without a session.
     **Check:** register, refresh, still logged in. Restart the server, still logged in. Wrong password gives 401.
 12. [ ] **Login and register pages.** Forms with field errors, redirect to `?next=` after success. The header shows the user's name, "Sell a book" and Logout when logged in, and Login / Register when not.
     **Check:** the whole flow works in the browser, including logout.

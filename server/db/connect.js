@@ -10,3 +10,8 @@ export async function connectDb(uri = process.env.MONGODB_URI) {
   await mongoose.connect(uri);
   console.log('connected to MongoDB');
 }
+
+// the session store waits on this so it shares mongoose's connection instead of opening a second one
+export const clientPromise = new Promise((resolve) => {
+  mongoose.connection.once('connected', () => resolve(mongoose.connection.getClient()));
+});

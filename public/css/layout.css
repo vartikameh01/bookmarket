@@ -99,12 +99,12 @@
   font-weight: 500;
 }
 
-.site-nav a {
+.site-nav a:not(.btn) {
   color: var(--ink);
   text-decoration: none;
 }
 
-.site-nav a:hover {
+.site-nav a:not(.btn):hover {
   color: var(--stamp);
 }
 
