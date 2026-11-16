@@ -376,7 +376,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
    **Check:** `npm run seed` prints the count of each collection and the data is visible in mongosh or MongoDB Compass (`mongodb://localhost:27017/?directConnection=true`). Note down two seeded ISBNs to use in the demo.
 9. [x] **First API routes.** `GET /api/genres`, and a first version of `GET /api/books` that returns books with at least one active listing, their lowest price and offer count (aggregate `listings` grouped by `bookId`, then `$lookup` the book).
    **Check:** both URLs show sensible JSON in the browser.
-10. [ ] **Frontend base.** `css/base.css` (reset, colour and spacing variables, fonts), `layout.css` (header, footer, page width), `components.css` (buttons, cards, forms, badges, toasts). `js/ui.js` (`escapeHtml`, `formatPrice`, `toast`), `js/api.js` (fetch wrapper from section 9), `js/header.js` (injects header and footer). `index.html` with an empty main area.
+10. [x] **Frontend base.** `css/base.css` (reset, colour and spacing variables, fonts), `layout.css` (header, footer, page width), `components.css` (buttons, cards, forms, badges, toasts). `js/ui.js` (`escapeHtml`, `formatPrice`, `toast`), `js/api.js` (fetch wrapper from section 9), `js/header.js` (injects header and footer). `index.html` with an empty main area.
     **Check:** the home page shows the header and footer with no errors in the console.
 
 ### 18 to 21 Nov: accounts and selling
