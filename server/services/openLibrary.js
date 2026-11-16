@@ -24,7 +24,7 @@ async function authorName(key, signal) {
 // throws on network errors and timeouts so the caller can answer 503 instead of "not found".
 export async function lookupIsbn(isbn13) {
   // one deadline for the whole lookup, which can take a few requests
-  const signal = AbortSignal.timeout(5000);
+  const signal = AbortSignal.timeout(10000);
 
   const edition = await getJson(`/isbn/${isbn13}.json`, signal);
   const title = edition?.title?.trim();
