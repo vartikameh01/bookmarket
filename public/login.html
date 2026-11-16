@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in · Bookmarket</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script type="module" src="/js/pages/login.js"></script>
+</head>
+<body>
+  <main id="main" class="page page-width auth" tabindex="-1">
+    <section class="auth-card" aria-labelledby="login-title">
+      <h1 id="login-title">Log in</h1>
+      <p class="auth-card__lede">Welcome back. Pick up where you left off.</p>
+      <form id="login-form" class="form" novalidate>
+        <p class="form-error" role="alert"></p>
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input id="login-email" name="email" type="email" autocomplete="email" required aria-describedby="login-email-error">
+          <p class="field__error" id="login-email-error"></p>
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required aria-describedby="login-password-error">
+          <p class="field__error" id="login-password-error"></p>
+        </div>
+        <button class="btn btn--primary" type="submit">Log in</button>
+      </form>
+      <p class="auth-card__switch">New here? <a href="/register.html">Create an account</a></p>
+    </section>
+  </main>
+</body>
+</html>

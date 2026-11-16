@@ -12,6 +12,14 @@ export function loginUrl() {
   return `/login.html?next=${encodeURIComponent(next)}`;
 }
 
+// only follow paths on this site, so a crafted login link can't send someone to another site after they sign in
+export function nextPath() {
+  const next = new URLSearchParams(location.search).get('next') || '/';
+  // compare parsed origins because string checks miss tricks like "/\t/evil.com", which browsers read as "//evil.com"
+  const url = new URL(next, location.origin);
+  return url.origin === location.origin ? url.pathname + url.search + url.hash : '/';
+}
+
 // every call to the backend goes through here so headers, cookies and error parsing live in one place
 export async function api(path, { method = 'GET', body, redirectOn401 = true } = {}) {
   const options = { method, credentials: 'same-origin', headers: { Accept: 'application/json' } };

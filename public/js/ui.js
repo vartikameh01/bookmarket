@@ -48,3 +48,37 @@ export function toast(message, { type = 'success', timeout = 4000 } = {}) {
     el.addEventListener('animationend', () => el.remove(), { once: true });
   }, timeout);
 }
+
+// each input's error goes in the element with id "<input id>-error", which the input lists in aria-describedby so screen readers read it with the field
+export function showFieldErrors(form, errors) {
+  const unmatched = [];
+  let firstInvalid;
+  for (const [name, message] of Object.entries(errors)) {
+    const input = form.elements[name];
+    const errorEl = input?.id && form.querySelector(`#${input.id}-error`);
+    if (!errorEl) {
+      unmatched.push(message);
+      continue;
+    }
+    errorEl.textContent = message;
+    input.setAttribute('aria-invalid', 'true');
+    firstInvalid ??= input;
+  }
+  firstInvalid?.focus();
+  // hand back errors with no matching field so the page can show them in its form level message
+  return unmatched;
+}
+
+export function clearFieldError(input) {
+  input.removeAttribute('aria-invalid');
+  const errorEl = input.id && input.form?.querySelector(`#${input.id}-error`);
+  if (errorEl) {
+    errorEl.textContent = '';
+  }
+}
+
+export function clearFieldErrors(form) {
+  for (const input of form.querySelectorAll('[aria-invalid]')) {
+    clearFieldError(input);
+  }
+}

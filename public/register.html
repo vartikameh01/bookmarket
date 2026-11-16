@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create an account · Bookmarket</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script type="module" src="/js/pages/register.js"></script>
+</head>
+<body>
+  <main id="main" class="page page-width auth" tabindex="-1">
+    <section class="auth-card" aria-labelledby="register-title">
+      <h1 id="register-title">Create an account</h1>
+      <p class="auth-card__lede">One account to buy books and to sell your own.</p>
+      <form id="register-form" class="form" novalidate>
+        <p class="form-error" role="alert"></p>
+        <div class="field">
+          <label for="register-name">Name</label>
+          <input id="register-name" name="name" type="text" autocomplete="name" maxlength="80" required aria-describedby="register-name-error">
+          <p class="field__error" id="register-name-error"></p>
+        </div>
+        <div class="field">
+          <label for="register-email">Email</label>
+          <input id="register-email" name="email" type="email" autocomplete="email" required aria-describedby="register-email-error">
+          <p class="field__error" id="register-email-error"></p>
+        </div>
+        <div class="field">
+          <label for="register-password">Password</label>
+          <input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="register-password-hint register-password-error">
+          <p class="field__hint" id="register-password-hint">At least 8 characters.</p>
+          <p class="field__error" id="register-password-error"></p>
+        </div>
+        <button class="btn btn--primary" type="submit">Create account</button>
+      </form>
+      <p class="auth-card__switch">Already have an account? <a href="/login.html">Log in</a></p>
+    </section>
+  </main>
+</body>
+</html>

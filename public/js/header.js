@@ -53,9 +53,13 @@ function renderFooter() {
 
 function renderNav(nav, user) {
   if (!user) {
+    // keep an existing next when moving between login and register, otherwise come back to this page
+    const onAuthPage = ['/login.html', '/register.html'].includes(location.pathname);
+    const here = location.pathname + location.search;
+    const query = onAuthPage ? location.search : here === '/' ? '' : `?next=${encodeURIComponent(here)}`;
     nav.innerHTML = `
-      <a href="/login.html">Log in</a>
-      <a class="btn btn--small" href="/register.html">Register</a>`;
+      <a href="/login.html${escapeHtml(query)}">Log in</a>
+      <a class="btn btn--small" href="/register.html${escapeHtml(query)}">Register</a>`;
     return;
   }
 
