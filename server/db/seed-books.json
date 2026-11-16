@@ -1,0 +1,672 @@
+[
+  {
+    "isbn13": "9780131103627",
+    "title": "The C Programming Language",
+    "author": "Brian W. Kernighan",
+    "publisher": "Prentice Hall",
+    "publishedYear": 1988,
+    "pages": 272,
+    "coverUrl": "https://covers.openlibrary.org/b/id/5732572-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780262033848",
+    "title": "Introduction to Algorithms",
+    "author": "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest",
+    "publisher": "The MIT Press",
+    "publishedYear": 2009,
+    "pages": 1292,
+    "coverUrl": "https://covers.openlibrary.org/b/id/11106524-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780132350884",
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "publisher": "Prentice Hall",
+    "publishedYear": 2008,
+    "pages": 431,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15126503-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780201633610",
+    "title": "Design Patterns",
+    "author": "Erich Gamma, Richard Helm, Ralph Johnson",
+    "publisher": "Addison-Wesley Professional",
+    "publishedYear": 1995,
+    "pages": 395,
+    "coverUrl": "https://covers.openlibrary.org/b/id/10827044-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9781593279509",
+    "title": "Eloquent JavaScript",
+    "author": "Marijn Haverbeke",
+    "publisher": "No Starch Press",
+    "publishedYear": 2018,
+    "pages": 472,
+    "coverUrl": "https://covers.openlibrary.org/b/id/8508178-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780596517748",
+    "title": "JavaScript: The Good Parts",
+    "author": "Douglas Crockford",
+    "publisher": "O'Reilly Media, Inc.",
+    "publishedYear": 2008,
+    "pages": 250,
+    "coverUrl": "https://covers.openlibrary.org/b/id/2536428-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9781449355739",
+    "title": "Learning Python",
+    "author": "Mark Lutz",
+    "publisher": "O'Reilly Media",
+    "publishedYear": 2013,
+    "pages": 1540,
+    "coverUrl": "https://covers.openlibrary.org/b/id/1312568-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780596007126",
+    "title": "Head First design patterns",
+    "author": "Eric Freeman, Elisabeth Freeman, Kathy Sierra",
+    "publisher": "O'Reilly",
+    "publishedYear": 2004,
+    "pages": 638,
+    "coverUrl": "https://covers.openlibrary.org/b/id/388950-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780134685991",
+    "title": "Effective Java",
+    "author": "Joshua Bloch",
+    "publisher": "Addison-Wesley Professional",
+    "publishedYear": 2017,
+    "pages": 416,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12420356-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780262510875",
+    "title": "Structure and Interpretation of Computer Programs",
+    "author": "Harold Abelson",
+    "publisher": "MIT Press Ltd",
+    "publishedYear": 1996,
+    "pages": 683,
+    "coverUrl": "https://covers.openlibrary.org/b/id/9325174-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9781449373320",
+    "title": "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems",
+    "author": "Martin Kleppmann",
+    "publisher": "O'Reilly Media",
+    "publishedYear": 2017,
+    "pages": 624,
+    "coverUrl": "https://covers.openlibrary.org/b/id/8434671-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780132126953",
+    "title": "Computer Networks",
+    "author": "Andrew S. Tanenbaum, John David Wetherall, David J. Wetherall",
+    "publisher": "Pearson",
+    "publishedYear": 2011,
+    "pages": null,
+    "coverUrl": "https://covers.openlibrary.org/b/id/9378629-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9781118063330",
+    "title": "Operating system concepts",
+    "author": "Abraham Silberschatz",
+    "publisher": "Wiley",
+    "publishedYear": 2013,
+    "pages": 919,
+    "coverUrl": "https://covers.openlibrary.org/b/id/7298708-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780073523323",
+    "title": "Database system concepts",
+    "author": "Abraham Silberschatz",
+    "publisher": "McGraw-Hill Companies",
+    "publishedYear": 2011,
+    "pages": 1376,
+    "coverUrl": "https://covers.openlibrary.org/b/id/8635569-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780321573513",
+    "title": "Algorithms",
+    "author": "Robert Sedgewick",
+    "publisher": "Addison-Wesley",
+    "publishedYear": 2011,
+    "pages": 955,
+    "coverUrl": "https://covers.openlibrary.org/b/id/7992499-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780984782857",
+    "title": "Cracking the Coding Interview: 189 Programming Questions and Solutions",
+    "author": "Gayle Laakmann McDowell",
+    "publisher": "CAREERCUP",
+    "publishedYear": 2015,
+    "pages": 697,
+    "coverUrl": "https://covers.openlibrary.org/b/id/8091016-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780201485677",
+    "title": "Refactoring",
+    "author": "Martin Fowler, Kent Beck, John Brant",
+    "publisher": "Addison-Wesley Professional",
+    "publishedYear": 1999,
+    "pages": 464,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15222839-L.jpg",
+    "genre": "programming"
+  },
+  {
+    "isbn13": "9780061120084",
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "publisher": "Harper Perennial Modern Classics",
+    "publishedYear": 2006,
+    "pages": 323,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15162569-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780451524935",
+    "title": "1984",
+    "author": "George Orwell",
+    "publisher": "Signet Classic",
+    "publishedYear": 1984,
+    "pages": null,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15257377-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780743273565",
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "publisher": "Scribner",
+    "publishedYear": 2004,
+    "pages": 180,
+    "coverUrl": "https://covers.openlibrary.org/b/id/13028546-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780141439518",
+    "title": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "publisher": "Penguin Books",
+    "publishedYear": 2003,
+    "pages": 435,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12645114-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780547928227",
+    "title": "The Hobbit",
+    "author": "J.R.R. Tolkien",
+    "publisher": "Mariner Books",
+    "publishedYear": 2012,
+    "pages": 300,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12003329-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780062315007",
+    "title": "The Alchemist",
+    "author": "Paulo Coelho",
+    "publisher": "HarperCollins Publishers",
+    "publishedYear": 2014,
+    "pages": 208,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15091614-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780439708180",
+    "title": "Harry Potter and the sorcerer's stone",
+    "author": "J. K. Rowling",
+    "publisher": "Scholastic Paperbacks",
+    "publishedYear": 1999,
+    "pages": 784,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14656855-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780307474278",
+    "title": "The Da Vinci Code",
+    "author": "Dan Brown",
+    "publisher": "Anchor",
+    "publishedYear": 2009,
+    "pages": 608,
+    "coverUrl": "https://covers.openlibrary.org/b/id/6301424-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780385490818",
+    "title": "The Handmaid's Tale",
+    "author": "Margaret Atwood",
+    "publisher": "Anchor Books",
+    "publishedYear": 2003,
+    "pages": 311,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15162571-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780060850524",
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "publisher": "Harper & Brothers",
+    "publishedYear": 1932,
+    "pages": null,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14630303-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9781594631931",
+    "title": "The Kite Runner",
+    "author": "Khaled Hosseini",
+    "publisher": "Riverhead Books",
+    "publishedYear": 2013,
+    "pages": 400,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12728870-L.jpg",
+    "genre": "fiction"
+  },
+  {
+    "isbn13": "9780060977498",
+    "title": "The God of Small Things",
+    "author": "Arundhati Roy",
+    "publisher": "HarperPerennial",
+    "publishedYear": 1999,
+    "pages": 321,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12002145-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9781416562603",
+    "title": "The White Tiger",
+    "author": "Aravind Adiga",
+    "publisher": "",
+    "publishedYear": null,
+    "pages": null,
+    "coverUrl": "https://covers.openlibrary.org/b/id/6296795-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780099578512",
+    "title": "Midnight's Children",
+    "author": "Salman Rushdie",
+    "publisher": "Vintage",
+    "publishedYear": 2006,
+    "pages": 672,
+    "coverUrl": "https://covers.openlibrary.org/b/id/77485-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780060786526",
+    "title": "A Suitable Boy",
+    "author": "Vikram Seth",
+    "publisher": "Harper Perennial Modern Classics",
+    "publishedYear": 2005,
+    "pages": 1474,
+    "coverUrl": "https://covers.openlibrary.org/b/id/36079-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780618485222",
+    "title": "The Namesake",
+    "author": "Jhumpa Lahiri",
+    "publisher": "Mariner Books",
+    "publishedYear": 2004,
+    "pages": 291,
+    "coverUrl": "https://covers.openlibrary.org/b/id/394682-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780395927205",
+    "title": "Interpreter of Maladies",
+    "author": "Jhumpa Lahiri",
+    "publisher": "Houghton Mifflin",
+    "publishedYear": 1999,
+    "pages": 198,
+    "coverUrl": "https://covers.openlibrary.org/b/id/257743-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9788129104595",
+    "title": "Five point someone",
+    "author": "Chetan Bhagat",
+    "publisher": "Rupa & Co.",
+    "publishedYear": 2004,
+    "pages": 270,
+    "coverUrl": "https://covers.openlibrary.org/b/id/6832129-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9788129115300",
+    "title": "2 states",
+    "author": "Chetan Bhagat",
+    "publisher": "Rupa & Co.",
+    "publishedYear": 2009,
+    "pages": 269,
+    "coverUrl": "https://covers.openlibrary.org/b/id/9714157-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9788129118806",
+    "title": "Revolution 2020",
+    "author": "Chetan Bhagat",
+    "publisher": "rupa",
+    "publishedYear": 2011,
+    "pages": 296,
+    "coverUrl": "https://covers.openlibrary.org/b/id/10118048-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9789380658742",
+    "title": "The Immortals of Meluha",
+    "author": "Amish Tripathi",
+    "publisher": "Westland Ltd.",
+    "publishedYear": 2010,
+    "pages": 418,
+    "coverUrl": "https://covers.openlibrary.org/b/id/11152324-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780143039655",
+    "title": "Malgudi days",
+    "author": "Rasipuram Krishnaswamy Narayan",
+    "publisher": "Penguin Books",
+    "publishedYear": 2006,
+    "pages": 264,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12628237-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780312428594",
+    "title": "Sea of poppies",
+    "author": "Amitav Ghosh",
+    "publisher": "Picador",
+    "publishedYear": 2009,
+    "pages": 543,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12460687-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780143062226",
+    "title": "Wise and Otherwise - A Salute to life",
+    "author": "Sudha Murti",
+    "publisher": "Penguin",
+    "publishedYear": 2006,
+    "pages": 232,
+    "coverUrl": "https://covers.openlibrary.org/b/id/10795720-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9780140449181",
+    "title": "The Bhagavad gita.",
+    "author": "Juan Mascaró",
+    "publisher": "Penguin Books",
+    "publishedYear": 2003,
+    "pages": 85,
+    "coverUrl": "https://covers.openlibrary.org/b/id/104347-L.jpg",
+    "genre": "indian-writing"
+  },
+  {
+    "isbn13": "9788121924986",
+    "title": "Quantitative Aptitude",
+    "author": "Aggarwal",
+    "publisher": "S Chand & Co Ltd",
+    "publishedYear": 2012,
+    "pages": 726,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14319066-L.jpg",
+    "genre": "exam-prep"
+  },
+  {
+    "isbn13": "9780671741907",
+    "title": "Word Power Made Easy",
+    "author": "Norman Lewis",
+    "publisher": "Pocket",
+    "publishedYear": 1991,
+    "pages": 528,
+    "coverUrl": "https://covers.openlibrary.org/b/id/408132-L.jpg",
+    "genre": "exam-prep"
+  },
+  {
+    "isbn13": "9788177091878",
+    "title": "Concepts of physics",
+    "author": "Harish Chandra Verma",
+    "publisher": "Bharati Bhawan",
+    "publishedYear": 2023,
+    "pages": 462,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15119600-L.jpg",
+    "genre": "exam-prep"
+  },
+  {
+    "isbn13": "9780735211292",
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "publisher": "Avery, an Imprint of Penguin Random House LLC",
+    "publishedYear": 2018,
+    "pages": 320,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12886417-L.jpg",
+    "genre": "self-help"
+  },
+  {
+    "isbn13": "9780743269513",
+    "title": "The 7 Habits of Highly Effective People",
+    "author": "Stephen R. Covey",
+    "publisher": "Free Press",
+    "publishedYear": 2004,
+    "pages": 384,
+    "coverUrl": "https://covers.openlibrary.org/b/id/9195831-L.jpg",
+    "genre": "self-help"
+  },
+  {
+    "isbn13": "9780671027032",
+    "title": "How to Win Friends and Influence People",
+    "author": "Dale Carnegie",
+    "publisher": "Pocket Books",
+    "publishedYear": 1998,
+    "pages": 320,
+    "coverUrl": "https://covers.openlibrary.org/b/id/13314878-L.jpg",
+    "genre": "self-help"
+  },
+  {
+    "isbn13": "9781585424337",
+    "title": "Think and grow rich",
+    "author": "Napoleon Hill",
+    "publisher": "Jeremy P. Tarcher/Penguin",
+    "publishedYear": 2005,
+    "pages": 302,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14830269-L.jpg",
+    "genre": "self-help"
+  },
+  {
+    "isbn13": "9781455586691",
+    "title": "Deep Work",
+    "author": "Cal Newport",
+    "publisher": "Grand Central Publishing",
+    "publishedYear": 2016,
+    "pages": 295,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14859612-L.jpg",
+    "genre": "self-help"
+  },
+  {
+    "isbn13": "9780553380163",
+    "title": "A Brief History of Time",
+    "author": "Stephen Hawking",
+    "publisher": "andom House Publishing Group",
+    "publishedYear": 1998,
+    "pages": null,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14589690-L.jpg",
+    "genre": "science-history"
+  },
+  {
+    "isbn13": "9780062316097",
+    "title": "Sapiens: A Brief History of Humankind",
+    "author": "Yuval Noah Harari",
+    "publisher": "Harper",
+    "publishedYear": 2015,
+    "pages": null,
+    "coverUrl": "https://covers.openlibrary.org/b/id/8594920-L.jpg",
+    "genre": "science-history"
+  },
+  {
+    "isbn13": "9780393317558",
+    "title": "Guns, germs, and steel",
+    "author": "Jared Diamond",
+    "publisher": "W. W. Norton & Company",
+    "publishedYear": 1999,
+    "pages": 494,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12863097-L.jpg",
+    "genre": "science-history"
+  },
+  {
+    "isbn13": "9780345539434",
+    "title": "Cosmos",
+    "author": "Carl Sagan",
+    "publisher": "Ballantine Books",
+    "publishedYear": 2013,
+    "pages": null,
+    "coverUrl": "https://covers.openlibrary.org/b/id/8290911-L.jpg",
+    "genre": "science-history"
+  },
+  {
+    "isbn13": "9780199291151",
+    "title": "The selfish gene",
+    "author": "Richard Dawkins",
+    "publisher": "Oxford University Press",
+    "publishedYear": 2006,
+    "pages": 360,
+    "coverUrl": "https://covers.openlibrary.org/b/id/8718355-L.jpg",
+    "genre": "science-history"
+  },
+  {
+    "isbn13": "9780465026562",
+    "title": "Gödel, Escher, Bach",
+    "author": "Douglas R. Hofstadter",
+    "publisher": "Basic Books",
+    "publishedYear": 1999,
+    "pages": 824,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15247757-L.jpg",
+    "genre": "science-history"
+  },
+  {
+    "isbn13": "9780374533557",
+    "title": "Thinking, fast and slow",
+    "author": "Daniel Kahneman",
+    "publisher": "Farrar, Straus and Giroux",
+    "publishedYear": 2013,
+    "pages": 499,
+    "coverUrl": "https://covers.openlibrary.org/b/id/7889800-L.jpg",
+    "genre": "business"
+  },
+  {
+    "isbn13": "9780804139298",
+    "title": "Zero to One",
+    "author": "Peter A. Thiel, Blake Masters",
+    "publisher": "Crown Business",
+    "publishedYear": 2014,
+    "pages": 195,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14858425-L.jpg",
+    "genre": "business"
+  },
+  {
+    "isbn13": "9780307887894",
+    "title": "The Lean Startup",
+    "author": "Eric Ries",
+    "publisher": "Crown Business",
+    "publishedYear": 2011,
+    "pages": 336,
+    "coverUrl": "https://covers.openlibrary.org/b/id/7104760-L.jpg",
+    "genre": "business"
+  },
+  {
+    "isbn13": "9780066620992",
+    "title": "Good to Great",
+    "author": "Jim Collins",
+    "publisher": "HarperBusiness",
+    "publishedYear": 2001,
+    "pages": 300,
+    "coverUrl": "https://covers.openlibrary.org/b/id/13852627-L.jpg",
+    "genre": "business"
+  },
+  {
+    "isbn13": "9788173711466",
+    "title": "Wings of Fire",
+    "author": "APJ Abdul Kalam",
+    "publisher": "Universities Press",
+    "publishedYear": 2002,
+    "pages": 222,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15122217-L.jpg",
+    "genre": "biography"
+  },
+  {
+    "isbn13": "9781451648539",
+    "title": "Steve Jobs",
+    "author": "Walter Isaacson",
+    "publisher": "Simon & Schuster",
+    "publishedYear": 2011,
+    "pages": 630,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15091624-L.jpg",
+    "genre": "biography"
+  },
+  {
+    "isbn13": "9781524763138",
+    "title": "Becoming",
+    "author": "Michelle Obama",
+    "publisher": "Crown Publishing Group",
+    "publishedYear": 2018,
+    "pages": 448,
+    "coverUrl": "https://covers.openlibrary.org/b/id/12983462-L.jpg",
+    "genre": "biography"
+  },
+  {
+    "isbn13": "9780807014271",
+    "title": "Man's Search for Meaning",
+    "author": "Viktor Emil Frankl",
+    "publisher": "Beacon Press",
+    "publishedYear": 2006,
+    "pages": 165,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14860515-L.jpg",
+    "genre": "biography"
+  },
+  {
+    "isbn13": "9780553296983",
+    "title": "Anne Frank",
+    "author": "Anne Frank",
+    "publisher": "Bantam Books",
+    "publishedYear": 1993,
+    "pages": 304,
+    "coverUrl": "https://covers.openlibrary.org/b/id/369276-L.jpg",
+    "genre": "biography"
+  },
+  {
+    "isbn13": "9780807059098",
+    "title": "An autobiography",
+    "author": "Mohandas Karamchand Gandhi",
+    "publisher": "Beacon Press",
+    "publishedYear": 1993,
+    "pages": 528,
+    "coverUrl": "https://covers.openlibrary.org/b/id/14556041-L.jpg",
+    "genre": "biography"
+  },
+  {
+    "isbn13": "9780316548182",
+    "title": "Long walk to freedom",
+    "author": "Nelson Mandela",
+    "publisher": "Little, Brown",
+    "publishedYear": 1995,
+    "pages": 638,
+    "coverUrl": "https://covers.openlibrary.org/b/id/3892240-L.jpg",
+    "genre": "biography"
+  }
+]

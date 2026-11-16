@@ -130,15 +130,15 @@ The Mongoose `Listing` schema repeats the core rules (`required`, `min`, `max`, 
 1. `GET /api/isbn/:isbn` on our server (the browser never calls Open Library directly, which avoids CORS issues and lets us cache).
 2. Server checks the checksum first; an invalid ISBN returns 400 without any network call.
 3. If the book is already in our `books` collection, return it immediately.
-4. Otherwise call `https://openlibrary.org/api/books?bibkeys=ISBN:<isbn>&format=json&jscmd=data` with a 5 second timeout.
-5. Found: save title, author, publisher, year, page count and cover URL (`https://covers.openlibrary.org/b/isbn/<isbn>-L.jpg`) into `books` and return it. The form shows the details read only, with the cover.
+4. Otherwise look the edition up at `https://openlibrary.org/isbn/<isbn>.json`, then fetch its author names (and the work record when the edition lacks authors or a cover), all within one 5 second timeout. A record with no title or no named author counts as not found.
+5. Found: save title, author, publisher, year, page count and cover URL (`https://covers.openlibrary.org/b/id/<coverId>-L.jpg`) into `books` and return it. The form shows the details read only, with the cover.
 6. Not found: return 404 "We couldn't find this ISBN on Open Library, so it can't be listed."
 7. Open Library timed out or errored: return 503 "Book lookup is unavailable, please try again in a minute."
 
 ### Validation checklist to show in the demo
 - `978-0-13-110362-7` (valid, The C Programming Language) auto fills
 - `978-0-13-110362-8` (one digit wrong) is rejected instantly by the checksum
-- A valid checksum ISBN that Open Library does not know is rejected with the "not found" message
+- `9789999999991` (valid checksum, unknown to Open Library) is rejected with the "not found" message. Recheck it before the demo, because anyone can add records to Open Library.
 - Price `5` shows a field error; choosing a used condition hides quantity
 - Submitting with browser checks bypassed (send the request from the DevTools console) still gets rejected by the server
 
@@ -372,7 +372,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
    **Check:** http://localhost:3000/api/nope returns JSON with status 404.
 7. [x] **Models.** `User`, `Genre`, `Book`, `Listing`, `Order` exactly as in section 7, including the indexes and the `min`/`max`/`enum` rules on `Listing`.
    **Check:** the server still starts, and the indexes appear (`db.listings.getIndexes()` in mongosh) after the seed in step 8.
-8. [ ] **Seed data.** Write a one off script `server/db/fetch-seed-books.js` that takes a list of ~60 ISBNs (mix of programming, fiction, Indian authors, exam prep), calls Open Library for each, and writes `server/db/seed-books.json` with title, author, publisher, year, pages and cover URL. Drop any ISBN Open Library doesn't know. Then `seed.js` wipes all collections and inserts ~8 genres, the books, 4 sellers and 1 buyer (all with password `demo1234`), ~100 listings (random seller, condition and price; used ones quantity 1), and 3 delivered orders with ratings (updating each seller's `ratingSum` and `ratingCount`).
+8. [x] **Seed data.** Write a one off script `server/db/fetch-seed-books.js` that takes a list of ~60 ISBNs (mix of programming, fiction, Indian authors, exam prep), calls Open Library for each, and writes `server/db/seed-books.json` with title, author, publisher, year, pages and cover URL. Drop any ISBN Open Library doesn't know. Then `seed.js` wipes all collections and inserts ~8 genres, the books, 4 sellers and 1 buyer (all with password `demo1234`), ~100 listings (random seller, condition and price; used ones quantity 1), and 3 delivered orders with ratings (updating each seller's `ratingSum` and `ratingCount`).
    **Check:** `npm run seed` prints the count of each collection and the data is visible in mongosh or MongoDB Compass (`mongodb://localhost:27017/?directConnection=true`). Note down two seeded ISBNs to use in the demo.
 9. [ ] **First API routes.** `GET /api/genres`, and a first version of `GET /api/books` that returns books with at least one active listing, their lowest price and offer count (aggregate `listings` grouped by `bookId`, then `$lookup` the book).
    **Check:** both URLs show sensible JSON in the browser.
@@ -389,7 +389,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
     **Check:** in `node`, `9780131103627` is valid, `9780131103628` is invalid, and `toIsbn13('0131103628')` returns `9780131103627`.
 14. [ ] **Shared validator.** `public/js/shared/validate-listing.js` exports `validateListing(input)` returning `{ value, errors }` with the rules from section 5.
     **Check:** in `node`, price `5` returns a price error, and condition `good` with quantity `4` returns quantity `1`.
-15. [ ] **ISBN lookup.** `services/openLibrary.js` (fetch with `AbortSignal.timeout(5000)`, returns `null` when the book is missing, throws on network errors) and `routes/isbn.js` (400 bad checksum, cached book from `books`, 404 not found, 503 lookup failed).
+15. [ ] **ISBN lookup.** `services/openLibrary.js` already exists from step 8 (one 5 second timeout for the whole lookup, returns `null` when the book is missing, throws on network errors). Add `routes/isbn.js` (400 bad checksum, cached book from `books`, 404 not found, 503 lookup failed).
     **Check:** while logged in, open `/api/isbn/9780131103627`, `/api/isbn/9780131103628` and a valid but unknown ISBN in the browser and see 200, 400 and 404.
 16. [ ] **Create listing API.** `POST /api/listings`: requireAuth, run the shared validator, find the book by `isbn13` (it must exist, because the lookup step saved it), set the book's genre if it has none, save the listing.
     **Check:** from the DevTools console, a `fetch` with price 5 gets 400 with a price error, and a valid body gets 201.
@@ -501,6 +501,7 @@ The final presentation is on 7 Dec.
 |---|---|
 | Falling behind schedule | Ratings and profile page are cut first; everything else is the core flow |
 | Open Library is slow or down during the demo | Unknown ISBNs can't be listed while it's down, so the demo uses an ISBN already cached in `books`; the lookup then answers instantly from our database. Keep a second cached ISBN as backup. |
+| Open Library data is wrong or vandalized | It is a wiki. In Nov 2026 a spam edition claimed the demo ISBN `9780131103627` and hijacked the `/api/books` endpoint, which is why the lookup uses `/isbn/<isbn>.json` and rejects records with no named author. The seed list was checked by hand, and seeded books are served from our database, so later edits on Open Library don't affect them. Open the demo ISBNs on the live site the day before. |
 | A real Indian edition isn't on Open Library | Expected and accepted for this scope; manual entry is listed as future scope |
 | College or venue Wi-Fi blocks MongoDB's port 27017 | The deployed app talks to Atlas from Render's servers, so venue Wi-Fi doesn't matter for it. If running on the laptop, use the local Docker database, which needs no internet for data. |
 | Transactions fail on a plain MongoDB | Only ever use the Docker replica set or Atlas; a standalone `mongod` does not support transactions |
