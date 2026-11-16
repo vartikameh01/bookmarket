@@ -368,7 +368,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
    **Check:** `npm install` finishes with no errors and `node_modules` is not shown by `git status`.
 5. [x] **Server skeleton.** `server/db/connect.js` (calls `mongoose.set('sanitizeFilter', true)` then `mongoose.connect`), `server/app.js` (`express.json()`, `express.static('public')`, `GET /api/health` returns `{ ok: true }`), `server/server.js` (loads dotenv, connects, then listens on `PORT`).
    **Check:** `npm run dev` logs "connected to MongoDB" and http://localhost:3000/api/health shows `{"ok":true}`.
-6. [ ] **Error handling.** `middleware/errorHandler.js` turns a Mongoose `ValidationError` into `400 { errors: { field: message } }`, a `CastError` into 404, and anything else into `500 { error }` (log the stack). Add a JSON 404 for unknown `/api` routes.
+6. [x] **Error handling.** `middleware/errorHandler.js` turns a Mongoose `ValidationError` into `400 { errors: { field: message } }`, a `CastError` into 404, and anything else into `500 { error }` (log the stack). Add a JSON 404 for unknown `/api` routes.
    **Check:** http://localhost:3000/api/nope returns JSON with status 404.
 7. [ ] **Models.** `User`, `Genre`, `Book`, `Listing`, `Order` exactly as in section 7, including the indexes and the `min`/`max`/`enum` rules on `Listing`.
    **Check:** the server still starts, and the indexes appear (`db.listings.getIndexes()` in mongosh) after the seed in step 8.
