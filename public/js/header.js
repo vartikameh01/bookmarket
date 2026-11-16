@@ -1,4 +1,4 @@
-import { api } from './api.js';
+import { api, loginUrl } from './api.js';
 import { escapeHtml, toast } from './ui.js';
 
 let userPromise;
@@ -8,6 +8,16 @@ export function getCurrentUser() {
   // treat any failure as logged out so a broken /auth/me never breaks the whole page
   userPromise ??= api('/auth/me', { redirectOn401: false }).catch(() => null);
   return userPromise;
+}
+
+// pages that need a login call this first, and it never resolves when it redirects so the rest of the page code doesn't run
+export async function requireUser() {
+  const user = await getCurrentUser();
+  if (!user) {
+    location.replace(loginUrl());
+    return new Promise(() => {});
+  }
+  return user;
 }
 
 function renderHeader() {

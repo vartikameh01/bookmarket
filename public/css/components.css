@@ -101,6 +101,8 @@
 }
 
 .book-card {
+  /* let the card shrink below its nowrap author line so the ellipsis applies instead of overflowing the grid */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -497,4 +499,621 @@ textarea[aria-invalid='true'] {
   margin-top: var(--space-5);
   text-align: center;
   font-size: 0.95rem;
+}
+
+/* cover stand in when open library has no image */
+
+.cover-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-3);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--card);
+  background: linear-gradient(160deg, var(--green), #1f3f34);
+}
+
+/* sell form */
+
+.sell {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .sell {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+
+  .sell .book-preview {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+.sell-form {
+  padding: var(--space-5);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.sell-form fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.field-row {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 36rem) {
+  .field-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.isbn-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 1.4em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.isbn-status--ok {
+  color: var(--success);
+}
+
+.isbn-status--ok::before {
+  content: '✓';
+}
+
+.isbn-status--loading::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid var(--rule);
+  border-top-color: var(--stamp);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.isbn-status .btn {
+  margin-left: var(--space-2);
+}
+
+.condition-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+@media (min-width: 36rem) {
+  .condition-options {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.condition-option {
+  position: relative;
+}
+
+.condition-option input {
+  position: absolute;
+  opacity: 0;
+}
+
+.condition-option label {
+  display: grid;
+  gap: 0.1rem;
+  height: 100%;
+  padding: var(--space-3);
+  font-weight: 600;
+  background: var(--paper);
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+
+.condition-option label small {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.condition-option label:hover {
+  border-color: var(--ink-soft);
+}
+
+.condition-option input:checked + label {
+  background: var(--card);
+  border-color: var(--stamp);
+  box-shadow: inset 0 0 0 1px var(--stamp);
+}
+
+.condition-option input:focus-visible + label {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+fieldset[aria-invalid='true'] .condition-option label {
+  border-color: var(--danger);
+}
+
+.input-prefix {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-prefix span {
+  display: grid;
+  place-items: center;
+  padding-inline: 0.8rem;
+  font-weight: 600;
+  background: var(--paper-deep);
+  border: 1.5px solid var(--rule);
+  border-right: 0;
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.input-prefix input:not([type='checkbox'], [type='radio']) {
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.char-count {
+  justify-self: end;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.field[hidden] {
+  display: none;
+}
+
+/* book preview beside the sell form */
+
+.book-preview {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--paper-deep);
+  border: 1.5px dashed var(--rule);
+  border-radius: var(--radius-lg);
+}
+
+.book-preview--found {
+  background: var(--card);
+  border-style: solid;
+  box-shadow: var(--shadow);
+  animation: rise 0.35s ease both;
+}
+
+.book-preview__cover {
+  width: 9rem;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--paper-deep), var(--rule));
+  border-radius: 3px var(--radius) var(--radius) 3px;
+  box-shadow: var(--shadow-lift);
+}
+
+.book-preview__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-preview h2 {
+  font-size: 1.3rem;
+}
+
+.book-preview dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  font-size: 0.9rem;
+}
+
+.book-preview dt {
+  color: var(--ink-soft);
+}
+
+.book-preview__empty {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.badge--active {
+  --badge-color: var(--green);
+}
+
+.badge--paused,
+.badge--soldout {
+  --badge-color: var(--ink-soft);
+}
+
+/* rows on my listings, cart and orders pages */
+
+.rows {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: var(--space-3) var(--space-4);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  animation: rise 0.35s ease both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+
+.row.is-highlighted {
+  border-color: var(--stamp);
+  box-shadow: inset 4px 0 0 var(--stamp), var(--shadow);
+}
+
+.row.is-muted .row__thumb,
+.row.is-muted .row__main {
+  opacity: 0.6;
+}
+
+.row__thumb {
+  width: 3.5rem;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--paper-deep), var(--rule));
+  border-radius: 2px 4px 4px 2px;
+  box-shadow: var(--shadow);
+}
+
+.row__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.row__thumb .cover-fallback {
+  padding: 2px;
+  font-size: 0.5rem;
+}
+
+.row__main {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.row__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.25;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a.row__title:hover {
+  color: var(--stamp);
+}
+
+.row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.row__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (min-width: 44rem) {
+  .row {
+    grid-template-columns: 3.5rem 1fr auto;
+  }
+
+  .row__actions {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+}
+
+.btn--danger {
+  color: var(--danger);
+  border-color: currentColor;
+}
+
+.btn--danger:hover {
+  color: var(--danger);
+  box-shadow: 0 3px 0 var(--danger);
+}
+
+.narrow {
+  max-width: 40rem;
+}
+
+.book-summary {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+/* catalog */
+
+.catalog {
+  display: grid;
+  gap: var(--space-5) var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .catalog {
+    grid-template-columns: 15rem minmax(0, 1fr);
+  }
+
+  .filters {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+.filters {
+  padding: var(--space-4);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+}
+
+.filters summary {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.filters[open] summary {
+  margin-bottom: var(--space-4);
+}
+
+.filters .form {
+  gap: var(--space-4);
+}
+
+.filters fieldset {
+  display: grid;
+  gap: var(--space-1);
+  padding: 0;
+  border: 0;
+}
+
+.filters legend {
+  margin-bottom: var(--space-1);
+  font-weight: 600;
+  font-size: 0.925rem;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.check input {
+  accent-color: var(--stamp);
+}
+
+.price-range {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.results-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  color: var(--ink-soft);
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-7);
+}
+
+.pagination a,
+.pagination span {
+  display: grid;
+  place-items: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding-inline: var(--space-3);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.pagination a:hover {
+  border-color: var(--ink);
+}
+
+.pagination [aria-current='page'] {
+  color: var(--card);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.pagination .is-gap {
+  border: 0;
+}
+
+/* home page */
+
+.hero {
+  display: grid;
+  gap: var(--space-6);
+  align-items: end;
+  padding: var(--space-6) 0 var(--space-7);
+  border-bottom: 3px double var(--ink);
+}
+
+@media (min-width: 56rem) {
+  .hero {
+    grid-template-columns: 1.3fr 1fr;
+  }
+}
+
+.hero__kicker {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  padding: 0.15rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stamp);
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  transform: rotate(-2deg);
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 1.6rem + 4vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.hero h1 em {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--stamp);
+}
+
+.hero p {
+  max-width: 34rem;
+  margin-top: var(--space-4);
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* a little shelf of spines, purely decoration */
+.shelf-art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 13rem;
+  padding: 0 var(--space-4);
+  border-bottom: 6px solid var(--ink);
+}
+
+.shelf-art span {
+  width: var(--w, 1.6rem);
+  height: var(--h, 80%);
+  background: var(--c, var(--green));
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset -4px 0 0 rgba(0, 0, 0, 0.15), inset 0 6px 0 rgba(255, 255, 255, 0.12);
+  transform-origin: bottom;
+  animation: spine-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+.shelf-art span.is-leaning {
+  transform: rotate(9deg);
+  animation-name: spine-lean;
+}
+
+@keyframes spine-up {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes spine-lean {
+  from {
+    transform: rotate(9deg) scaleY(0);
+  }
+  to {
+    transform: rotate(9deg);
+  }
+}
+
+.home-section {
+  margin-top: var(--space-7);
+}
+
+.home-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.home-section__head a {
+  font-weight: 600;
+}
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+}
+
+@media (min-width: 40rem) {
+  .shelf {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .shelf {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }

@@ -1,0 +1,194 @@
+import { requireUser } from '../header.js';
+import { api } from '../api.js';
+import { escapeHtml, setFieldError, showFieldErrors } from '../ui.js';
+import { coverHtml } from '../render.js';
+import { normalizeIsbn, toIsbn13 } from '../shared/isbn.js';
+import { NOTES_MAX, validateListing } from '../shared/validate-listing.js';
+
+await requireUser();
+
+const form = document.querySelector('#sell-form');
+const isbnInput = form.elements.isbn;
+const isbnStatus = document.querySelector('#sell-isbn-status');
+const genreSelect = form.elements.genreId;
+const genreField = document.querySelector('#genre-field');
+const quantityField = document.querySelector('#quantity-field');
+const usedNote = document.querySelector('#used-note');
+const notesCount = document.querySelector('#sell-notes-count');
+const preview = document.querySelector('#book-preview');
+const formError = form.querySelector('.form-error');
+const submit = form.querySelector('[type="submit"]');
+
+const LOOKUP_DELAY_MS = 400;
+const OTHER_FIELDS = ['genreId', 'condition', 'price', 'quantity', 'notes'];
+
+let book = null;
+let genres = [];
+let lookupTimer;
+// bumped on every keystroke so a slow lookup for an old ISBN can't overwrite a newer one
+let lookupSeq = 0;
+// errors only show once a field has been left or the form submitted, so an empty form isn't covered in red
+const touched = new Set();
+
+function values() {
+  return Object.fromEntries(new FormData(form));
+}
+
+function setIsbnState(kind, message = '', retry = false) {
+  isbnStatus.className = kind && kind !== 'error' ? `isbn-status isbn-status--${kind}` : 'isbn-status';
+  isbnStatus.textContent = kind === 'error' ? '' : message;
+  setFieldError(form, 'isbn', kind === 'error' ? message : '');
+  if (retry) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn--small';
+    button.textContent = 'Try again';
+    button.addEventListener('click', () => isbnInput.dispatchEvent(new Event('input')));
+    isbnStatus.append(button);
+  }
+}
+
+function genreName(id) {
+  return genres.find((g) => g._id === id)?.name;
+}
+
+function renderPreview() {
+  if (!book) {
+    preview.className = 'book-preview';
+    preview.innerHTML = `<p class="book-preview__empty">The book's title, author and cover appear here once the ISBN checks out.</p>`;
+    return;
+  }
+  const details = [
+    ['Author', book.author],
+    ['Publisher', book.publisher],
+    ['Year', book.publishedYear],
+    ['Pages', book.pages],
+    ['Genre', genreName(book.genreId)],
+    ['ISBN', book.isbn13],
+  ].filter(([, v]) => v);
+  preview.className = 'book-preview book-preview--found';
+  preview.innerHTML = `
+    <div class="book-preview__cover">${coverHtml(book)}</div>
+    <h2>${escapeHtml(book.title)}</h2>
+    <dl>${details.map(([k, v]) => `<dt>${k}</dt><dd>${escapeHtml(v)}</dd>`).join('')}</dl>`;
+}
+
+// runs the shared validator on every change, shows errors for touched fields and unlocks submit only when all is well
+function refresh() {
+  const condition = form.elements.condition.value;
+  quantityField.hidden = condition !== 'new';
+  usedNote.hidden = !condition || condition === 'new';
+  genreField.hidden = !book || Boolean(book.genreId);
+  notesCount.textContent = `${form.elements.notes.value.length} / ${NOTES_MAX}`;
+
+  const { errors } = validateListing(values(), { needsGenre: !book?.genreId });
+  for (const name of OTHER_FIELDS) {
+    setFieldError(form, name, touched.has(name) ? errors[name] : '');
+  }
+  submit.disabled = !book || Object.keys(errors).length > 0;
+}
+
+async function lookup(isbn13) {
+  const seq = lookupSeq;
+  try {
+    const found = await api(`/isbn/${isbn13}`);
+    if (seq !== lookupSeq) {
+      return;
+    }
+    book = found;
+    if (book.genreId) {
+      genreSelect.value = book.genreId;
+    }
+    setIsbnState('ok', `Found on Open Library: ${book.title}`);
+  } catch (err) {
+    if (seq !== lookupSeq) {
+      return;
+    }
+    setIsbnState('error', err.message);
+    if (err.status === 503 || err.status === 0) {
+      setIsbnState('error', err.message, true);
+    }
+  }
+  renderPreview();
+  refresh();
+}
+
+isbnInput.addEventListener('input', () => {
+  const raw = normalizeIsbn(isbnInput.value);
+  const isbn13 = toIsbn13(raw);
+  lookupSeq++;
+  clearTimeout(lookupTimer);
+  book = null;
+  renderPreview();
+
+  if (!raw) {
+    setIsbnState('');
+  } else if (isbn13) {
+    setIsbnState('loading', 'Checking Open Library…');
+    lookupTimer = setTimeout(() => lookup(isbn13), LOOKUP_DELAY_MS);
+  } else if (raw.length >= 13 || (raw.length === 10 && !/^97[89]/.test(raw))) {
+    // a full length ISBN that fails the checksum is rejected straight away, without any network call
+    setIsbnState('error', "This isn't a valid ISBN. Check it for a typo.");
+  } else {
+    // ten characters starting 978 is most likely an ISBN 13 still being typed
+    setIsbnState('');
+  }
+  refresh();
+});
+
+isbnInput.addEventListener('blur', () => {
+  const raw = normalizeIsbn(isbnInput.value);
+  if (raw && !toIsbn13(raw)) {
+    setIsbnState('error', "This isn't a valid ISBN. It should have 10 or 13 digits.");
+  }
+});
+
+form.addEventListener('focusout', (event) => {
+  if (OTHER_FIELDS.includes(event.target.name)) {
+    touched.add(event.target.name);
+    refresh();
+  }
+});
+form.addEventListener('input', (event) => {
+  if (event.target !== isbnInput) {
+    refresh();
+  }
+});
+form.addEventListener('change', (event) => {
+  // a radio click counts as touched right away because radios don't lose focus on choice
+  if (event.target.name === 'condition') {
+    touched.add('condition');
+  }
+  refresh();
+});
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  OTHER_FIELDS.forEach((name) => touched.add(name));
+  refresh();
+  if (submit.disabled) {
+    return;
+  }
+
+  formError.textContent = '';
+  submit.disabled = true;
+  submit.textContent = 'Listing…';
+  try {
+    const listing = await api('/listings', { method: 'POST', body: values() });
+    location.href = `/seller/listings.html?created=${encodeURIComponent(listing._id)}`;
+  } catch (err) {
+    const unmatched = err.errors ? showFieldErrors(form, err.errors) : [err.message];
+    formError.textContent = unmatched.join(' ');
+    submit.textContent = 'List this book';
+    submit.disabled = false;
+  }
+});
+
+genres = await api('/genres');
+genreSelect.append(...genres.map((g) => new Option(g.name, g._id)));
+renderPreview();
+// a pasted or remembered ISBN is already in the box when the page loads
+if (isbnInput.value) {
+  isbnInput.dispatchEvent(new Event('input'));
+}
+refresh();

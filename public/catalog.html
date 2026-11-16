@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browse books · Bookmarket</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script type="module" src="/js/pages/catalog.js"></script>
+</head>
+<body>
+  <main id="main" class="page page-width" tabindex="-1">
+    <div class="page-head">
+      <h1 id="catalog-title">Browse books</h1>
+    </div>
+
+    <div class="catalog">
+      <details class="filters" id="filters">
+        <summary>Filters</summary>
+        <form id="filter-form" class="form" action="/catalog.html" method="get">
+          <input type="hidden" name="q">
+
+          <div class="field">
+            <label for="filter-genre">Genre</label>
+            <select id="filter-genre" name="genre">
+              <option value="">All genres</option>
+            </select>
+          </div>
+
+          <fieldset>
+            <legend>Condition</legend>
+            <label class="check"><input type="radio" name="condition" value=""> Any</label>
+            <label class="check"><input type="radio" name="condition" value="new"> New</label>
+            <label class="check"><input type="radio" name="condition" value="used"> Any used</label>
+            <label class="check"><input type="radio" name="condition" value="like_new"> Like new</label>
+            <label class="check"><input type="radio" name="condition" value="good"> Good</label>
+            <label class="check"><input type="radio" name="condition" value="fair"> Fair</label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Price (₹)</legend>
+            <div class="price-range">
+              <label class="visually-hidden" for="filter-min">Minimum price in rupees</label>
+              <input id="filter-min" name="min" type="number" inputmode="numeric" min="0" step="1" placeholder="Min">
+              <span aria-hidden="true">to</span>
+              <label class="visually-hidden" for="filter-max">Maximum price in rupees</label>
+              <input id="filter-max" name="max" type="number" inputmode="numeric" min="0" step="1" placeholder="Max">
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="filter-sort">Sort by</label>
+            <select id="filter-sort" name="sort">
+              <option value="newest">Newest listed</option>
+              <option value="price_asc">Price, low to high</option>
+              <option value="price_desc">Price, high to low</option>
+            </select>
+          </div>
+
+          <button class="btn btn--ink" type="submit">Apply</button>
+          <a href="/catalog.html" id="clear-filters">Clear all filters</a>
+        </form>
+      </details>
+
+      <section aria-labelledby="catalog-title">
+        <p class="results-head" id="results-head" aria-live="polite"></p>
+        <div id="results"><div class="spinner" role="status" aria-label="Loading books"></div></div>
+        <nav class="pagination" id="pagination" aria-label="Pages"></nav>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

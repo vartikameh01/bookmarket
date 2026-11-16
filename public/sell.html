@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sell a book · Bookmarket</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script type="module" src="/js/pages/sell.js"></script>
+</head>
+<body>
+  <main id="main" class="page page-width" tabindex="-1">
+    <div class="page-head">
+      <h1>Sell a book</h1>
+      <p class="muted">Type the ISBN and we fill in the rest from Open Library.</p>
+    </div>
+
+    <div class="sell">
+
+      <form id="sell-form" class="form sell-form" novalidate>
+        <p class="form-error" role="alert"></p>
+
+        <div class="field">
+          <label for="sell-isbn">ISBN</label>
+          <input id="sell-isbn" name="isbn" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="20" required placeholder="978-0-13-110362-7" aria-describedby="sell-isbn-hint sell-isbn-status sell-isbn-error">
+          <p class="field__hint" id="sell-isbn-hint">10 or 13 digits, usually on the back cover above the barcode. Hyphens are fine.</p>
+          <p class="isbn-status" id="sell-isbn-status" aria-live="polite"></p>
+          <p class="field__error" id="sell-isbn-error"></p>
+        </div>
+
+        <div class="field" id="genre-field" hidden>
+          <label for="sell-genre">Genre</label>
+          <select id="sell-genre" name="genreId" required aria-describedby="sell-genre-hint sell-genre-error">
+            <option value="">Choose a genre</option>
+          </select>
+          <p class="field__hint" id="sell-genre-hint">You're the first to list this book, so you pick its genre.</p>
+          <p class="field__error" id="sell-genre-error"></p>
+        </div>
+
+        <fieldset class="field" id="sell-condition" aria-describedby="sell-condition-error">
+          <legend>Condition</legend>
+          <div class="condition-options">
+            <div class="condition-option">
+              <input type="radio" id="sell-condition-new" name="condition" value="new">
+              <label for="sell-condition-new">New <small>Unread, as from the shop</small></label>
+            </div>
+            <div class="condition-option">
+              <input type="radio" id="sell-condition-like_new" name="condition" value="like_new">
+              <label for="sell-condition-like_new">Like new <small>Read once, no marks</small></label>
+            </div>
+            <div class="condition-option">
+              <input type="radio" id="sell-condition-good" name="condition" value="good">
+              <label for="sell-condition-good">Good <small>Some wear, all pages intact</small></label>
+            </div>
+            <div class="condition-option">
+              <input type="radio" id="sell-condition-fair" name="condition" value="fair">
+              <label for="sell-condition-fair">Fair <small>Worn, notes or highlights</small></label>
+            </div>
+          </div>
+          <p class="field__error" id="sell-condition-error"></p>
+        </fieldset>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="sell-price">Price</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">₹</span>
+              <input id="sell-price" name="price" type="number" inputmode="numeric" min="10" max="10000" step="1" required aria-describedby="sell-price-hint sell-price-error">
+            </div>
+            <p class="field__hint" id="sell-price-hint">Whole rupees, ₹10 to ₹10,000.</p>
+            <p class="field__error" id="sell-price-error"></p>
+          </div>
+
+          <div class="field" id="quantity-field" hidden>
+            <label for="sell-quantity">Copies</label>
+            <input id="sell-quantity" name="quantity" type="number" inputmode="numeric" min="1" max="100" step="1" value="1" required aria-describedby="sell-quantity-hint sell-quantity-error">
+            <p class="field__hint" id="sell-quantity-hint">How many new copies you have, up to 100.</p>
+            <p class="field__error" id="sell-quantity-error"></p>
+          </div>
+        </div>
+        <p class="field__hint" id="used-note" hidden>A used copy is one of a kind, so it's listed as a single copy.</p>
+
+        <div class="field">
+          <label for="sell-notes">Notes <span class="muted">(optional)</span></label>
+          <textarea id="sell-notes" name="notes" maxlength="500" placeholder="Edition details, highlights, anything a buyer should know" aria-describedby="sell-notes-count sell-notes-error"></textarea>
+          <p class="char-count" id="sell-notes-count">0 / 500</p>
+          <p class="field__error" id="sell-notes-error"></p>
+        </div>
+
+        <button class="btn btn--primary" type="submit" disabled>List this book</button>
+      </form>
+
+      <aside class="book-preview" id="book-preview" aria-live="polite">
+        <p class="book-preview__empty">The book's title, author and cover appear here once the ISBN checks out.</p>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

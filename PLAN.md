@@ -393,18 +393,18 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
     **Check:** while logged in, open `/api/isbn/9780131103627`, `/api/isbn/9780131103628` and a valid but unknown ISBN in the browser and see 200, 400 and 404.
 16. [x] **Create listing API.** `POST /api/listings`: requireAuth, run the shared validator, find the book by `isbn13` (it must exist, because the lookup step saved it), set the book's genre if it has none, save the listing.
     **Check:** from the DevTools console, a `fetch` with price 5 gets 400 with a price error, and a valid body gets 201.
-17. [ ] **Sell form.** `sell.html` and `pages/sell.js`: ISBN field with live checksum, debounced lookup, read only title, author and cover, genre select, condition, price, quantity (hidden for used), notes. Errors under each field linked with `aria-describedby`; submit disabled until valid.
+17. [x] **Sell form.** `sell.html` and `pages/sell.js`: ISBN field with live checksum, debounced lookup, read only title, author and cover, genre select, condition, price, quantity (hidden for used), notes. Errors under each field linked with `aria-describedby`; submit disabled until valid.
     **Check:** every item in the validation checklist in section 5 behaves as described.
-18. [ ] **My listings.** `GET /listings/mine`, `PATCH /listings/:id`, `DELETE /listings/:id` (soft delete), all checking the owner. `seller/listings.html` with pause and remove buttons, and `seller/listing-edit.html`.
+18. [x] **My listings.** `GET /listings/mine`, `PATCH /listings/:id`, `DELETE /listings/:id` (soft delete), all checking the owner. `seller/listings.html` with pause and remove buttons, and `seller/listing-edit.html`.
     **Check:** editing, pausing and removing all survive a refresh, and patching another seller's listing id returns 404.
 
 ### 22 to 24 Nov: browsing
 
-19. [ ] **Full catalog API.** `GET /api/books` supports `q` (escaped regex on title and author, or exact `isbn13` when `q` looks like an ISBN), `genre`, `condition`, `min` and `max` in rupees, `sort` (`price_asc`, `price_desc`, `newest`) and `page` (12 per page), returning `{ items, total, page, pages }`. Only listings that are active with quantity above 0 count.
+19. [x] **Full catalog API.** `GET /api/books` supports `q` (escaped regex on title and author, or exact `isbn13` when `q` looks like an ISBN), `genre`, `condition`, `min` and `max` in rupees, `sort` (`price_asc`, `price_desc`, `newest`) and `page` (12 per page), returning `{ items, total, page, pages }`. Only listings that are active with quantity above 0 count.
     **Check:** each filter and sort changes the JSON as expected when typed into the URL.
-20. [ ] **Catalog page.** `catalog.html` with a filter sidebar, a grid of book cards (cover, title, author, "from ₹X", "N offers") and pagination. Filters read from and write to the query string. The header search box submits to `catalog.html?q=`.
+20. [x] **Catalog page.** `catalog.html` with a filter sidebar, a grid of book cards (cover, title, author, "from ₹X", "N offers") and pagination. Filters read from and write to the query string. The header search box submits to `catalog.html?q=`.
     **Check:** apply filters, go to page 2, press Back, and the previous filters and page come back.
-21. [ ] **Home page.** Recently listed, cheapest used copies, and genre chips, all using `/api/books` with different parameters.
+21. [x] **Home page.** Recently listed, cheapest used copies, and genre chips, all using `/api/books` with different parameters.
     **Check:** each section links to the matching catalog view.
 22. [ ] **Book page.** `GET /api/books/:id` returns the book and its active offers sorted by price, with seller name and average rating. `book.html` shows the cover, details and an offers table with condition badges, ratings like ★ 4.5 (12), stock and "Add to cart" (disabled on your own listings, sends you to login when logged out).
     **Check:** a seeded book with 3 sellers shows 3 rows in price order.
