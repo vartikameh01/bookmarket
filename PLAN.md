@@ -387,7 +387,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
     **Check:** the whole flow works in the browser, including logout.
 13. [x] **ISBN helpers.** `public/js/shared/isbn.js`: `normalizeIsbn`, `isValidIsbn10`, `isValidIsbn13`, `toIsbn13`.
     **Check:** in `node`, `9780131103627` is valid, `9780131103628` is invalid, and `toIsbn13('0131103628')` returns `9780131103627`.
-14. [ ] **Shared validator.** `public/js/shared/validate-listing.js` exports `validateListing(input)` returning `{ value, errors }` with the rules from section 5.
+14. [x] **Shared validator.** `public/js/shared/validate-listing.js` exports `validateListing(input)` returning `{ value, errors }` with the rules from section 5.
     **Check:** in `node`, price `5` returns a price error, and condition `good` with quantity `4` returns quantity `1`.
 15. [ ] **ISBN lookup.** `services/openLibrary.js` already exists from step 8 (one 5 second timeout for the whole lookup, returns `null` when the book is missing, throws on network errors). Add `routes/isbn.js` (400 bad checksum, cached book from `books`, 404 not found, 503 lookup failed).
     **Check:** while logged in, open `/api/isbn/9780131103627`, `/api/isbn/9780131103628` and a valid but unknown ISBN in the browser and see 200, 400 and 404.

@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
+import { CONDITIONS } from '../../public/js/shared/validate-listing.js';
 
 const { Schema } = mongoose;
 
-export const CONDITIONS = ['new', 'like_new', 'good', 'fair'];
+// re-exported so Order keeps importing it from here
+export { CONDITIONS };
 
 // last safety net under the shared validator, so code that skips the route still cannot save a bad listing
 const listingSchema = new Schema(
