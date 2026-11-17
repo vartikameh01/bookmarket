@@ -361,7 +361,7 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
 ### 4 Nov and 16 to 17 Nov: setup and data
 
 1. [x] **Git repository.** `.gitignore`, `.env.example`, README, this plan, first commit.
-2. [ ] **GitHub remote.** Deferred to step 34, since nothing needs it before deploying.
+2. [x] **GitHub remote.** `origin` is `git@github.com:vartikameh01/bookmarket.git`, pushed on 17 Nov.
 3. [x] **Local MongoDB.** `docker-compose.yml` runs MongoDB 8 as a single node replica set (`rs0`) with a named volume, and initiates the set on first start. `docker compose up -d --wait` starts it, `docker compose down` stops it (data is kept). Copy `.env.example` to `.env`; its default `MONGODB_URI` points at this container. Put a long random string in `SESSION_SECRET`. Atlas is deferred to step 34.
    **Check:** `docker compose exec mongo mongosh --eval 'rs.status().members[0].stateStr'` prints `PRIMARY`.
 4. [x] **npm project.** `npm init -y`, add `"type": "module"`, then `npm install express mongoose express-session connect-mongo bcryptjs dotenv` and `npm install -D nodemon`. Scripts: `"dev": "nodemon server/server.js"`, `"start": "node server/server.js"`, `"seed": "node server/db/seed.js"`.
@@ -448,7 +448,7 @@ Catch up on anything that slipped and act on the supervisor's feedback from the 
 
 ### 4 Dec: deploy
 
-34. [ ] **GitHub and Render.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`. Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New > Blueprint from that repo. `render.yaml` sets up a free web service in Singapore (closest to the Mumbai cluster) with `npm ci`, `npm start`, Node 24, `NODE_ENV=production`, a generated `SESSION_SECRET` and the `/api/health` health check, and asks for `MONGODB_URI`, where you paste the Atlas string.
+34. [ ] **GitHub and Render.** The GitHub repo is done (step 2). Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New > Blueprint from that repo. `render.yaml` sets up a free web service in Singapore (closest to the Mumbai cluster) with `npm ci`, `npm start`, Node 24, `NODE_ENV=production`, a generated `SESSION_SECRET` and the `/api/health` health check, and asks for `MONGODB_URI`, where you paste the Atlas string.
     **Check:** the live URL loads, and login survives a refresh (this proves the secure cookie and `trust proxy` are right).
 35. [ ] **Live test.** Seed Atlas with `MONGODB_URI='<atlas uri>' npm run seed`, then go through the whole demo script on a phone using the live URL.
     **Check:** the demo works start to finish on the phone.
