@@ -1232,6 +1232,16 @@ a.row__title:hover {
   object-fit: cover;
 }
 
+/* let the frame take the real cover's shape once it loads, because cropping to 2:3 cut the edges off wide covers like Introduction to Algorithms */
+.book-detail__cover:has(.cover-img.is-loaded) {
+  aspect-ratio: auto;
+}
+
+.book-detail__cover .cover-img.is-loaded {
+  position: relative;
+  height: auto;
+}
+
 .book-detail__author {
   margin-top: var(--space-2);
   font-size: 1.15rem;

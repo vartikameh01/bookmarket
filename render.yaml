@@ -1,0 +1,22 @@
+# render blueprint, used through New > Blueprint on render.com
+services:
+  - type: web
+    name: bookmarket
+    runtime: node
+    plan: free
+    # singapore is the closest render region to the atlas cluster in mumbai, and every request makes several database round trips
+    region: singapore
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      # pin the node version the app was built and tested on, because engines only sets a minimum
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      # pasted in the render dashboard so the atlas password never lands in git
+      - key: MONGODB_URI
+        sync: false
