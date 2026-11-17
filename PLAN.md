@@ -448,7 +448,7 @@ Catch up on anything that slipped and act on the supervisor's feedback from the 
 
 ### 4 Dec: deploy
 
-34. [ ] **GitHub and Render.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`. Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New Web Service from that repo, build `npm install`, start `npm start`, Node 22, environment variables `MONGODB_URI` (the Atlas one), `SESSION_SECRET`, `NODE_ENV=production`.
+34. [ ] **GitHub and Render.** Create an empty repo on the vartikameh01 account (no README), `git remote add origin git@github.com:vartikameh01/<repo>.git`, `git push -u origin main`. Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New > Blueprint from that repo. `render.yaml` sets up a free web service in Singapore (closest to the Mumbai cluster) with `npm ci`, `npm start`, Node 24, `NODE_ENV=production`, a generated `SESSION_SECRET` and the `/api/health` health check, and asks for `MONGODB_URI`, where you paste the Atlas string.
     **Check:** the live URL loads, and login survives a refresh (this proves the secure cookie and `trust proxy` are right).
 35. [ ] **Live test.** Seed Atlas with `MONGODB_URI='<atlas uri>' npm run seed`, then go through the whole demo script on a phone using the live URL.
     **Check:** the demo works start to finish on the phone.
@@ -457,7 +457,7 @@ Catch up on anything that slipped and act on the supervisor's feedback from the 
 
 The final presentation is on 7 Dec.
 
-36. [ ] **Report material.** Screenshots of every page, the architecture diagram and the data model diagram (draw.io).
+36. [x] **Report material.** Screenshots of every page, the architecture diagram and the data model diagram (draw.io). All in `docs/`, along with a slide draft in `docs/slides.md`.
 37. [ ] **Slides.** 12 slides following section 13.
 38. [ ] **Rehearse.** Run the demo twice with a timer, then record a backup video with QuickTime screen recording.
 39. [ ] **Wrap up.** Update the README changelog, reseed Atlas one last time, and tag the release with `git tag v1.0 && git push --tags`.
