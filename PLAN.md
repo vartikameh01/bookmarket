@@ -406,18 +406,18 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
     **Check:** apply filters, go to page 2, press Back, and the previous filters and page come back.
 21. [x] **Home page.** Recently listed, cheapest used copies, and genre chips, all using `/api/books` with different parameters.
     **Check:** each section links to the matching catalog view.
-22. [ ] **Book page.** `GET /api/books/:id` returns the book and its active offers sorted by price, with seller name and average rating. `book.html` shows the cover, details and an offers table with condition badges, ratings like ★ 4.5 (12), stock and "Add to cart" (disabled on your own listings, sends you to login when logged out).
+22. [x] **Book page.** `GET /api/books/:id` returns the book and its active offers sorted by price, with seller name and average rating. `book.html` shows the cover, details and an offers table with condition badges, ratings like ★ 4.5 (12), stock and "Add to cart" (disabled on your own listings, sends you to login when logged out).
     **Check:** a seeded book with 3 sellers shows 3 rows in price order.
 
 ### 25 to 28 Nov: cart, checkout and orders
 
-23. [ ] **Cart API.** `GET /api/cart` loads the listings, drops ones that are no longer active or in stock, groups by seller and adds totals. `PUT /api/cart/:listingId` sets quantity (0 removes, rejects your own listings, caps at stock). `/auth/me` includes the cart count; pages fire `cart:change` after changes so the header badge updates.
+23. [x] **Cart API.** `GET /api/cart` loads the listings, drops ones that are no longer active or in stock, groups by seller and adds totals. `PUT /api/cart/:listingId` sets quantity (0 removes, rejects your own listings, caps at stock). `/auth/me` includes the cart count; pages fire `cart:change` after changes so the header badge updates.
     **Check:** add from the book page and the badge goes up without a reload.
-24. [ ] **Cart page.** `cart.html` grouped by seller, quantity inputs, remove buttons, subtotals, grand total and a Checkout button.
+24. [x] **Cart page.** `cart.html` grouped by seller, quantity inputs, remove buttons, subtotals, grand total and a Checkout button.
     **Check:** changing quantities updates totals, and the empty cart shows a friendly message.
-25. [ ] **Checkout page.** `checkout.html`: address form prefilled from the saved address, a "save this address" checkbox, order summary, and a mock card form (16 digits, MM/YY, 3 digit CVV, checked in the browser only).
+25. [x] **Checkout page.** `checkout.html`: address form prefilled from the saved address, a "save this address" checkbox, order summary, and a mock card form (16 digits, MM/YY, 3 digit CVV, checked in the browser only).
     **Check:** invalid card details or a missing pincode block the Pay button.
-26. [ ] **Place order.** `POST /api/orders` runs the transaction from section 7: decrement stock, one order per seller with a shared `checkoutId`, `paymentRef` like `MOCK-8F3K2A`, empty the cart. Out of stock returns 409 with the book's title. Then redirect to `orders.html?checkout=<id>`, which highlights the new orders.
+26. [x] **Place order.** `POST /api/orders` runs the transaction from section 7: decrement stock, one order per seller with a shared `checkoutId`, `paymentRef` like `MOCK-8F3K2A`, empty the cart. Out of stock returns 409 with the book's title. Then redirect to `orders.html?checkout=<id>`, which highlights the new orders.
     **Check:** log in as two buyers in two browsers, both with the last copy in the cart, and pay in both. One succeeds, the other gets the 409 message, and stock in the database is 0, not negative.
 27. [ ] **Orders pages.** `orders.html` (newest first, seller, status badge, total) and `order.html` (items, shipping address, status, Cancel button while Placed). `POST /orders/:id/cancel` is a transaction that sets `cancelled` and restocks.
     **Check:** cancel an order and the listing's quantity goes back up.

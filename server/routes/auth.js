@@ -2,6 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { requireAuth } from '../middleware/requireAuth.js';
+import { cartCount } from './cart.js';
 
 const router = Router();
 
@@ -17,7 +18,7 @@ function publicUser(user) {
     name: user.name,
     email: user.email,
     address: user.address,
-    cartCount: user.cart.reduce((sum, item) => sum + item.quantity, 0),
+    cartCount: cartCount(user.cart),
   };
 }
 

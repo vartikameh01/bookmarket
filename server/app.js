@@ -9,6 +9,8 @@ import genresRouter from './routes/genres.js';
 import booksRouter from './routes/books.js';
 import isbnRouter from './routes/isbn.js';
 import listingsRouter from './routes/listings.js';
+import cartRouter from './routes/cart.js';
+import ordersRouter from './routes/orders.js';
 
 if (!process.env.SESSION_SECRET) {
   throw new Error('SESSION_SECRET is not set. Copy .env.example to .env first.');
@@ -52,6 +54,8 @@ app.use('/api/genres', genresRouter);
 app.use('/api/books', booksRouter);
 app.use('/api/isbn', isbnRouter);
 app.use('/api/listings', listingsRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/orders', ordersRouter);
 
 app.use('/api', apiNotFound);
 app.use(errorHandler);

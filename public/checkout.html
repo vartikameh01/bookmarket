@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout · Bookmarket</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script type="module" src="/js/pages/checkout.js"></script>
+</head>
+<body>
+  <main id="main" class="page page-width" tabindex="-1">
+    <div class="page-head">
+      <h1>Checkout</h1>
+      <a href="/cart.html">Back to cart</a>
+    </div>
+    <ul class="notices" id="notices" role="status"></ul>
+
+    <div class="cart">
+      <form id="checkout-form" class="form sell-form" novalidate>
+        <p class="form-error" role="alert"></p>
+
+        <section class="checkout-section" aria-labelledby="address-title">
+          <h2 id="address-title">Delivery address</h2>
+          <div class="form">
+            <div class="field-row">
+              <div class="field">
+                <label for="ship-name">Full name</label>
+                <input id="ship-name" name="name" autocomplete="shipping name" maxlength="80" required aria-describedby="ship-name-error">
+                <p class="field__error" id="ship-name-error"></p>
+              </div>
+              <div class="field">
+                <label for="ship-phone">Mobile number</label>
+                <input id="ship-phone" name="phone" type="tel" inputmode="tel" autocomplete="shipping tel" maxlength="16" required aria-describedby="ship-phone-error">
+                <p class="field__error" id="ship-phone-error"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="ship-line1">House number and street</label>
+              <input id="ship-line1" name="line1" autocomplete="shipping address-line1" maxlength="120" required aria-describedby="ship-line1-error">
+              <p class="field__error" id="ship-line1-error"></p>
+            </div>
+            <div class="field">
+              <label for="ship-line2">Area or landmark <span class="muted">(optional)</span></label>
+              <input id="ship-line2" name="line2" autocomplete="shipping address-line2" maxlength="120" aria-describedby="ship-line2-error">
+              <p class="field__error" id="ship-line2-error"></p>
+            </div>
+            <div class="field-row--3">
+              <div class="field">
+                <label for="ship-city">City</label>
+                <input id="ship-city" name="city" autocomplete="shipping address-level2" maxlength="60" required aria-describedby="ship-city-error">
+                <p class="field__error" id="ship-city-error"></p>
+              </div>
+              <div class="field">
+                <label for="ship-state">State</label>
+                <select id="ship-state" name="state" autocomplete="shipping address-level1" required aria-describedby="ship-state-error">
+                  <option value="">Choose</option>
+                </select>
+                <p class="field__error" id="ship-state-error"></p>
+              </div>
+              <div class="field">
+                <label for="ship-pincode">Pincode</label>
+                <input id="ship-pincode" name="pincode" inputmode="numeric" autocomplete="shipping postal-code" maxlength="6" required aria-describedby="ship-pincode-error">
+                <p class="field__error" id="ship-pincode-error"></p>
+              </div>
+            </div>
+            <label class="check"><input type="checkbox" name="saveAddress" id="ship-save"> Save this address to my profile for next time</label>
+          </div>
+        </section>
+
+        <section class="checkout-section" aria-labelledby="payment-title">
+          <h2 id="payment-title">Payment</h2>
+          <p class="mock-note">This is a demo shop, so no money moves. Any 16 digit card number with a future expiry works, and the card details never leave your browser.</p>
+          <div class="field-row--3">
+            <div class="field">
+              <label for="card-number">Card number</label>
+              <input id="card-number" name="cardNumber" inputmode="numeric" autocomplete="cc-number" maxlength="19" placeholder="4242 4242 4242 4242" required aria-describedby="card-number-error">
+              <p class="field__error" id="card-number-error"></p>
+            </div>
+            <div class="field">
+              <label for="card-expiry">Expiry</label>
+              <input id="card-expiry" name="cardExpiry" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="MM/YY" required aria-describedby="card-expiry-error">
+              <p class="field__error" id="card-expiry-error"></p>
+            </div>
+            <div class="field">
+              <label for="card-cvv">CVV</label>
+              <input id="card-cvv" name="cardCvv" inputmode="numeric" autocomplete="cc-csc" maxlength="3" required aria-describedby="card-cvv-error">
+              <p class="field__error" id="card-cvv-error"></p>
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <aside class="order-summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">Order summary</h2>
+        <div id="summary"><div class="spinner" role="status" aria-label="Loading your order"></div></div>
+        <button class="btn btn--primary" type="submit" form="checkout-form" id="pay" disabled>Pay</button>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

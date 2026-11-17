@@ -187,6 +187,8 @@ form.addEventListener('submit', async (event) => {
 genres = await api('/genres');
 genreSelect.append(...genres.map((g) => new Option(g.name, g._id)));
 renderPreview();
+// the book page links here with ?isbn= so a seller can list a copy of that book straight away
+isbnInput.value ||= new URLSearchParams(location.search).get('isbn') || '';
 // a pasted or remembered ISBN is already in the box when the page loads
 if (isbnInput.value) {
   isbnInput.dispatchEvent(new Event('input'));

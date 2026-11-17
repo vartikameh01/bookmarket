@@ -1117,3 +1117,345 @@ a.row__title:hover {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
+
+/* book page */
+
+.book-detail {
+  display: grid;
+  gap: var(--space-5) var(--space-7);
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  .book-detail {
+    grid-template-columns: 16rem minmax(0, 1fr);
+  }
+}
+
+.book-detail__cover {
+  width: min(16rem, 60vw);
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--paper-deep), var(--rule));
+  border-radius: 3px var(--radius) var(--radius) 3px;
+  box-shadow: var(--shadow-lift);
+  transform: rotate(-1.5deg);
+}
+
+.book-detail__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-detail__author {
+  margin-top: var(--space-2);
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+}
+
+.book-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-1) var(--space-4);
+  margin-top: var(--space-5);
+  font-size: 0.95rem;
+}
+
+.book-facts dt {
+  color: var(--ink-soft);
+}
+
+.book-detail__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--rule);
+}
+
+.book-detail__summary .price {
+  font-size: 1.8rem;
+}
+
+.offers {
+  margin-top: var(--space-7);
+}
+
+.offers h2 {
+  margin-bottom: var(--space-4);
+}
+
+.offer-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.offer-table th {
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink-soft);
+  background: var(--paper-deep);
+}
+
+.offer-table td {
+  padding: var(--space-3) var(--space-4);
+  vertical-align: middle;
+  border-top: 1px solid var(--rule);
+}
+
+.offer-table tbody tr:first-child td {
+  border-top: 0;
+}
+
+.offer-table .price {
+  font-size: 1.2rem;
+}
+
+.offer-table__seller {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.offer-table__notes {
+  max-width: 22rem;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.offer-table__cheapest {
+  margin-left: var(--space-2);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+/* stack the table into cards on narrow screens, each cell labelled from data-label */
+@media (max-width: 47.99rem) {
+  .offer-table,
+  .offer-table tbody,
+  .offer-table tr,
+  .offer-table td {
+    display: block;
+  }
+
+  .offer-table {
+    background: none;
+    border: 0;
+  }
+
+  .offer-table thead {
+    display: none;
+  }
+
+  .offer-table tbody {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .offer-table tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-4);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+  }
+
+  .offer-table td {
+    padding: 0;
+    border: 0;
+  }
+
+  .offer-table td[data-label='Notes'],
+  .offer-table td[data-label='Action'] {
+    grid-column: 1 / -1;
+  }
+
+  .offer-table td[data-label='Action'] .btn {
+    width: 100%;
+  }
+}
+
+/* cart and checkout */
+
+.cart {
+  display: grid;
+  gap: var(--space-5) var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .cart {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+
+  .order-summary {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+.seller-group {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.seller-group + .seller-group {
+  margin-top: var(--space-6);
+}
+
+.seller-group__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.seller-group__head h2 {
+  font-size: 1.15rem;
+}
+
+.seller-group__subtotal {
+  text-align: right;
+  color: var(--ink-soft);
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.qty input {
+  width: 4.5rem;
+}
+
+.line-total {
+  min-width: 5rem;
+  text-align: right;
+  font-size: 1.1rem;
+}
+
+.order-summary {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.order-summary h2 {
+  font-size: 1.2rem;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.summary-line--total {
+  padding-top: var(--space-3);
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-top: 3px double var(--ink);
+}
+
+.summary-line--total .price {
+  font-size: 1.5rem;
+}
+
+.order-summary .btn--primary {
+  width: 100%;
+}
+
+.notices {
+  display: grid;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  list-style: none;
+  background: color-mix(in srgb, var(--mustard) 12%, var(--card));
+  border-left: 4px solid var(--mustard);
+  border-radius: var(--radius);
+}
+
+.notices:empty {
+  display: none;
+}
+
+.checkout-section + .checkout-section {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--rule);
+}
+
+.checkout-section h2 {
+  margin-bottom: var(--space-4);
+  font-size: 1.3rem;
+}
+
+.mock-note {
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.875rem;
+  color: var(--teal);
+  background: color-mix(in srgb, var(--teal) 8%, var(--card));
+  border: 1px dashed var(--teal);
+  border-radius: var(--radius);
+}
+
+.field-row--3 {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 36rem) {
+  .field-row--3 {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.summary-items {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.summary-items h3 {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.summary-items .summary-line span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

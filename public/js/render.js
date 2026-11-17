@@ -32,3 +32,11 @@ export function bookCardHtml(item, i = 0) {
       <p class="book-card__meta"><span class="price price--from">${formatPrice(item.minPricePaise)}</span><span>${offers}</span></p>
     </a>`;
 }
+
+export function starsHtml(rating, count) {
+  if (!count) {
+    return '<span class="stars">No ratings yet</span>';
+  }
+  const label = `Rated ${rating} out of 5 by ${count} buyer${count === 1 ? '' : 's'}`;
+  return `<span class="stars" aria-label="${label}" role="img"><span class="stars__icon" aria-hidden="true">★</span> ${rating.toFixed(1)} <span aria-hidden="true">(${count})</span></span>`;
+}

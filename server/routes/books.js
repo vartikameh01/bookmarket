@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import Listing from '../models/Listing.js';
 import Book from '../models/Book.js';
 import Genre from '../models/Genre.js';
@@ -130,6 +131,43 @@ router.get('/', async (req, res) => {
 
   const total = result.total[0]?.count ?? 0;
   res.json({ items: result.items, total, page, pages: Math.ceil(total / limit) });
+});
+
+// average to one decimal for display, null when nobody has rated the seller yet
+function sellerSummary(seller) {
+  const rating = seller.ratingCount ? Math.round((seller.ratingSum / seller.ratingCount) * 10) / 10 : null;
+  return { _id: seller._id, name: seller.name, rating, ratingCount: seller.ratingCount };
+}
+
+// a book with nothing on sale still loads, because old orders link to it
+router.get('/:id', async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(404).json({ error: 'Book not found' });
+  }
+  const book = await Book.findById(req.params.id).populate('genreId', 'name slug').lean();
+  if (!book) {
+    return res.status(404).json({ error: 'Book not found' });
+  }
+
+  const listings = await Listing.find({ bookId: book._id, status: 'active', quantity: mongoose.trusted({ $gt: 0 }) })
+    .sort({ pricePaise: 1, createdAt: 1 })
+    .populate('sellerId', 'name ratingSum ratingCount')
+    .lean();
+
+  const { genreId, ...rest } = book;
+  res.json({
+    ...rest,
+    genre: genreId,
+    offers: listings.map((l) => ({
+      _id: l._id,
+      condition: l.condition,
+      pricePaise: l.pricePaise,
+      quantity: l.quantity,
+      notes: l.notes,
+      createdAt: l.createdAt,
+      seller: sellerSummary(l.sellerId),
+    })),
+  });
 });
 
 export default router;
