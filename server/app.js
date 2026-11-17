@@ -12,6 +12,7 @@ import listingsRouter from './routes/listings.js';
 import cartRouter from './routes/cart.js';
 import ordersRouter from './routes/orders.js';
 import salesRouter from './routes/sales.js';
+import profileRouter from './routes/profile.js';
 
 if (!process.env.SESSION_SECRET) {
   throw new Error('SESSION_SECRET is not set. Copy .env.example to .env first.');
@@ -58,8 +59,13 @@ app.use('/api/listings', listingsRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/sales', salesRouter);
+app.use('/api/profile', profileRouter);
 
 app.use('/api', apiNotFound);
+// any other unknown path is a page someone typed or an old link, so answer with the html not found page
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(import.meta.dirname, '../public/404.html'));
+});
 app.use(errorHandler);
 
 export default app;

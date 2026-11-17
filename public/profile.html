@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile · Bookmarket</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script type="module" src="/js/pages/profile.js"></script>
+</head>
+<body>
+  <main id="main" class="page page-width" tabindex="-1">
+    <div class="page-head">
+      <h1>Profile</h1>
+      <a href="/orders.html">My orders</a>
+    </div>
+
+    <div class="profile">
+      <aside class="ticket" id="ticket" aria-label="Your reader's ticket">
+        <div class="spinner" role="status" aria-label="Loading your profile"></div>
+      </aside>
+
+      <div class="profile__forms">
+        <section class="panel profile-section" aria-labelledby="details-title">
+          <h2 id="details-title">Your details</h2>
+          <form id="details-form" class="form" novalidate>
+            <p class="form-error" role="alert"></p>
+            <div class="field-row">
+              <div class="field">
+                <label for="prof-name">Name</label>
+                <input id="prof-name" name="name" autocomplete="name" maxlength="80" required aria-describedby="prof-name-hint prof-name-error">
+                <p class="field__hint" id="prof-name-hint">Shown to sellers and on your listings.</p>
+                <p class="field__error" id="prof-name-error"></p>
+              </div>
+              <div class="field">
+                <label for="prof-email">Email</label>
+                <input id="prof-email" type="email" readonly aria-describedby="prof-email-hint">
+                <p class="field__hint" id="prof-email-hint">You log in with this, so it can't be changed.</p>
+              </div>
+            </div>
+
+            <fieldset class="profile-address">
+              <legend>Saved delivery address</legend>
+              <p class="field__hint">Checkout fills this in for you. Leave every box empty to forget it.</p>
+              <div class="field-row">
+                <div class="field">
+                  <label for="prof-addr-name">Deliver to</label>
+                  <input id="prof-addr-name" name="address.name" autocomplete="shipping name" maxlength="80" aria-describedby="prof-addr-name-error">
+                  <p class="field__error" id="prof-addr-name-error"></p>
+                </div>
+                <div class="field">
+                  <label for="prof-addr-phone">Mobile number</label>
+                  <input id="prof-addr-phone" name="address.phone" type="tel" inputmode="tel" autocomplete="shipping tel" maxlength="16" aria-describedby="prof-addr-phone-error">
+                  <p class="field__error" id="prof-addr-phone-error"></p>
+                </div>
+              </div>
+              <div class="field">
+                <label for="prof-addr-line1">House number and street</label>
+                <input id="prof-addr-line1" name="address.line1" autocomplete="shipping address-line1" maxlength="120" aria-describedby="prof-addr-line1-error">
+                <p class="field__error" id="prof-addr-line1-error"></p>
+              </div>
+              <div class="field">
+                <label for="prof-addr-line2">Area or landmark <span class="muted">(optional)</span></label>
+                <input id="prof-addr-line2" name="address.line2" autocomplete="shipping address-line2" maxlength="120" aria-describedby="prof-addr-line2-error">
+                <p class="field__error" id="prof-addr-line2-error"></p>
+              </div>
+              <div class="field-row--3">
+                <div class="field">
+                  <label for="prof-addr-city">City</label>
+                  <input id="prof-addr-city" name="address.city" autocomplete="shipping address-level2" maxlength="60" aria-describedby="prof-addr-city-error">
+                  <p class="field__error" id="prof-addr-city-error"></p>
+                </div>
+                <div class="field">
+                  <label for="prof-addr-state">State</label>
+                  <select id="prof-addr-state" name="address.state" autocomplete="shipping address-level1" aria-describedby="prof-addr-state-error">
+                    <option value="">Choose</option>
+                  </select>
+                  <p class="field__error" id="prof-addr-state-error"></p>
+                </div>
+                <div class="field">
+                  <label for="prof-addr-pincode">Pincode</label>
+                  <input id="prof-addr-pincode" name="address.pincode" inputmode="numeric" autocomplete="shipping postal-code" maxlength="6" aria-describedby="prof-addr-pincode-error">
+                  <p class="field__error" id="prof-addr-pincode-error"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="form-actions">
+              <button class="btn btn--primary" type="submit">Save details</button>
+              <span class="saved-note" id="details-saved" role="status"></span>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel profile-section" aria-labelledby="password-title">
+          <h2 id="password-title">Change password</h2>
+          <form id="password-form" class="form" novalidate>
+            <p class="form-error" role="alert"></p>
+            <div class="field">
+              <label for="pw-current">Current password</label>
+              <input id="pw-current" name="currentPassword" type="password" autocomplete="current-password" required aria-describedby="pw-current-error">
+              <p class="field__error" id="pw-current-error"></p>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="pw-new">New password</label>
+                <input id="pw-new" name="newPassword" type="password" autocomplete="new-password" minlength="8" required aria-describedby="pw-new-hint pw-new-error">
+                <p class="field__hint" id="pw-new-hint">At least 8 characters.</p>
+                <p class="field__error" id="pw-new-error"></p>
+              </div>
+              <div class="field">
+                <label for="pw-confirm">Type it again</label>
+                <input id="pw-confirm" name="confirmPassword" type="password" autocomplete="new-password" required aria-describedby="pw-confirm-error">
+                <p class="field__error" id="pw-confirm-error"></p>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn--ink" type="submit">Change password</button>
+              <span class="saved-note" id="password-saved" role="status"></span>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

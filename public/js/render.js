@@ -2,13 +2,47 @@
 import { escapeHtml, formatPrice } from './ui.js';
 import { CONDITION_LABELS } from './shared/validate-listing.js';
 
-export function coverHtml(book) {
-  if (book.coverUrl) {
-    return `<img src="${escapeHtml(book.coverUrl)}" alt="Cover of ${escapeHtml(book.title)}" loading="lazy">`;
+// cloth colours for the stand in cover, picked from the title so a book always gets the same one
+const CLOTHS = ['#2e5b4b', '#7f2414', '#2d6a73', '#9a5a3c', '#2b2823', '#5b4a6e', '#8a6a1c'];
+
+function clothFor(title) {
+  let hash = 0;
+  for (const ch of String(title)) {
+    hash = (hash * 31 + ch.codePointAt(0)) >>> 0;
   }
-  // the title is printed next to every cover, so the stand in is hidden from screen readers
-  return `<span class="cover-fallback" aria-hidden="true">${escapeHtml(book.title)}</span>`;
+  return CLOTHS[hash % CLOTHS.length];
 }
+
+// the cloth cover always sits underneath, so a slow or broken open library image still leaves a designed cover
+export function coverHtml(book) {
+  const fallback = `
+    <span class="cover-fallback" style="--cloth: ${clothFor(book.title)}" aria-hidden="true">
+      <span class="cover-fallback__title">${escapeHtml(book.title)}</span>
+      ${book.author ? `<span class="cover-fallback__author">${escapeHtml(book.author)}</span>` : ''}
+    </span>`;
+  if (!book.coverUrl) {
+    return fallback;
+  }
+  return `${fallback}<img class="cover-img" src="${escapeHtml(book.coverUrl)}" alt="Cover of ${escapeHtml(book.title)}" loading="lazy">`;
+}
+
+// load and error don't bubble, so listen in the capture phase to catch every cover on the page
+document.addEventListener('load', (event) => {
+  if (event.target.classList?.contains('cover-img')) {
+    // open library answers some missing covers with a tiny blank gif instead of an error
+    if (event.target.naturalWidth < 10) {
+      event.target.remove();
+    } else {
+      event.target.classList.add('is-loaded');
+    }
+  }
+}, true);
+
+document.addEventListener('error', (event) => {
+  if (event.target.classList?.contains('cover-img')) {
+    event.target.remove();
+  }
+}, true);
 
 export function conditionBadge(condition) {
   return `<span class="badge badge--${escapeHtml(condition)}">${escapeHtml(CONDITION_LABELS[condition] ?? condition)}</span>`;

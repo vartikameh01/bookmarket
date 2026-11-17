@@ -439,11 +439,11 @@ Catch up on anything that slipped and act on the supervisor's feedback from the 
 
 ### 2 to 3 Dec: profile and polish
 
-31. [ ] **Profile.** `profile.html`, `PATCH /api/profile` (name, address), `POST /api/profile/password` (needs the current password).
+31. [x] **Profile.** `profile.html`, `PATCH /api/profile` (name, address), `POST /api/profile/password` (needs the current password).
     **Check:** a wrong current password is rejected, and the new password works after logging out.
-32. [ ] **Polish pass.** Loading spinners, empty states (cart, orders, listings, sales, no search results), error toasts, `404.html`, visible focus outlines, `alt` text, and every page at 375 px wide in DevTools device mode.
+32. [x] **Polish pass.** Loading spinners, empty states (cart, orders, listings, sales, no search results), error toasts, `404.html`, visible focus outlines, `alt` text, and every page at 375 px wide in DevTools device mode.
     **Check:** nothing overflows sideways on the phone sized view.
-33. [ ] **Full manual walkthrough.** Run the validation checklist (section 5), the demo script (section 12) and these security spot checks: login with `{"email":{"$ne":null},"password":"x"}` is rejected, editing someone else's listing gives 404, adding your own listing to the cart is rejected, and a price sent in the checkout body is ignored.
+33. [x] **Full manual walkthrough.** Run the validation checklist (section 5), the demo script (section 12) and these security spot checks: login with `{"email":{"$ne":null},"password":"x"}` is rejected, editing someone else's listing gives 404, adding your own listing to the cart is rejected, and a price sent in the checkout body is ignored.
     **Check:** everything passes; fix and recheck anything that doesn't.
 
 ### 4 Dec: deploy

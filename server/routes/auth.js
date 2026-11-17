@@ -6,13 +6,13 @@ import { cartCount } from './cart.js';
 
 const router = Router();
 
-const BCRYPT_COST = 10;
+export const BCRYPT_COST = 10;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // compared against when the email is unknown, so a wrong email takes as long as a wrong password and doesn't reveal which accounts exist
 const DUMMY_HASH = bcrypt.hashSync('not a real password', BCRYPT_COST);
 
 // the one user shape every auth route returns, so the header can rely on it
-function publicUser(user) {
+export function publicUser(user) {
   return {
     _id: user._id,
     name: user.name,
@@ -22,8 +22,20 @@ function publicUser(user) {
   };
 }
 
+// register and the profile password change share this so both enforce the same rule
+export function passwordError(password) {
+  if (password.length < 8) {
+    return 'Password must be at least 8 characters';
+  }
+  // bcrypt only uses the first 72 bytes, so longer passwords would silently match on a prefix
+  if (new TextEncoder().encode(password).length > 72) {
+    return 'Password must be 72 characters or fewer';
+  }
+  return null;
+}
+
 // a fresh session id on login stops an attacker from planting a known id before the user signs in
-function startSession(req, userId) {
+export function startSession(req, userId) {
   return new Promise((resolve, reject) => {
     req.session.regenerate((err) => {
       if (err) {
@@ -36,7 +48,8 @@ function startSession(req, userId) {
 }
 
 router.post('/register', async (req, res) => {
-  const name = String(req.body.name ?? '').trim();
+  // an object like { "$ne": 1 } would otherwise be saved as the text "[object Object]"
+  const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
   const email = String(req.body.email ?? '').trim().toLowerCase();
   const password = String(req.body.password ?? '');
 
@@ -49,11 +62,8 @@ router.post('/register', async (req, res) => {
   if (!EMAIL_PATTERN.test(email) || email.length > 254) {
     errors.email = 'Enter a valid email address';
   }
-  // bcrypt only uses the first 72 bytes, so longer passwords would silently match on a prefix
-  if (password.length < 8) {
-    errors.password = 'Password must be at least 8 characters';
-  } else if (new TextEncoder().encode(password).length > 72) {
-    errors.password = 'Password must be 72 characters or fewer';
+  if (passwordError(password)) {
+    errors.password = passwordError(password);
   }
   if (Object.keys(errors).length) {
     return res.status(400).json({ errors });
