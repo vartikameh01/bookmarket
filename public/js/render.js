@@ -40,3 +40,20 @@ export function starsHtml(rating, count) {
   const label = `Rated ${rating} out of 5 by ${count} buyer${count === 1 ? '' : 's'}`;
   return `<span class="stars" aria-label="${label}" role="img"><span class="stars__icon" aria-hidden="true">★</span> ${rating.toFixed(1)} <span aria-hidden="true">(${count})</span></span>`;
 }
+
+const STATUS_LABELS = { placed: 'Placed', shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled' };
+
+export function statusBadge(status) {
+  return badge(status, STATUS_LABELS[status] ?? status);
+}
+
+const dateFormat = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+export function formatDate(value) {
+  return dateFormat.format(new Date(value));
+}
+
+// the last 6 hex digits of the id are unique enough to read out to a seller and much friendlier than 24
+export function orderNumber(id) {
+  return `#${String(id).slice(-6).toUpperCase()}`;
+}

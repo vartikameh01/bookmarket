@@ -11,7 +11,7 @@ const router = Router();
 router.use(requireAuth);
 
 // thrown inside a transaction to abort it and answer the buyer with a specific status
-class CheckoutError extends Error {
+class OrderError extends Error {
   constructor(status, message) {
     super(message);
     this.status = status;
@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
     await session.withTransaction(async () => {
       const user = await User.findById(req.userId).session(session);
       if (!user.cart.length) {
-        throw new CheckoutError(400, 'Your cart is empty');
+        throw new OrderError(400, 'Your cart is empty');
       }
 
       const ids = user.cart.map((item) => item.listingId);
@@ -58,7 +58,7 @@ router.post('/', async (req, res) => {
         const listing = byId.get(String(item.listingId));
         const title = listing?.bookId?.title ?? 'A book in your cart';
         if (!listing || String(listing.sellerId) === req.userId) {
-          throw new CheckoutError(409, `Sorry, “${title}” is no longer available. Nothing was charged.`);
+          throw new OrderError(409, `Sorry, “${title}” is no longer available. Nothing was charged.`);
         }
 
         // the $gte filter means two buyers racing for the last copy can't both take it
@@ -70,7 +70,7 @@ router.post('/', async (req, res) => {
         if (taken.modifiedCount !== 1) {
           const left = listing.status === 'active' ? listing.quantity : 0;
           const why = left > 0 ? `only ${left} left` : 'just sold out';
-          throw new CheckoutError(409, `Sorry, “${title}” ${why}. Nothing was charged, and your cart has been updated.`);
+          throw new OrderError(409, `Sorry, “${title}” ${why}. Nothing was charged, and your cart has been updated.`);
         }
 
         const sellerId = String(listing.sellerId);
@@ -107,7 +107,7 @@ router.post('/', async (req, res) => {
       await user.save({ session });
     });
   } catch (err) {
-    if (err instanceof CheckoutError) {
+    if (err instanceof OrderError) {
       return res.status(err.status).json({ error: err.message });
     }
     throw err;
@@ -116,6 +116,157 @@ router.post('/', async (req, res) => {
   }
 
   res.status(201).json({ checkoutId, orderIds: orders.map((o) => o._id), paymentRef });
+});
+
+// covers come from the listing's book, so an order still shows them even after the listing is removed
+export const WITH_BOOKS = {
+  path: 'items.listingId',
+  select: 'bookId',
+  populate: { path: 'bookId', select: 'coverUrl' },
+};
+
+// the shape both the buyer and seller pages read, with snapshot names shortened
+export function orderView(order) {
+  const person = (user) => (user?._id ? { _id: user._id, name: user.name } : null);
+  return {
+    _id: order._id,
+    checkoutId: String(order.checkoutId),
+    status: order.status,
+    totalPaise: order.totalPaise,
+    paymentRef: order.paymentRef,
+    shipping: order.shipping,
+    rating: order.rating ?? null,
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
+    seller: person(order.sellerId),
+    buyer: person(order.buyerId),
+    items: order.items.map((item) => {
+      const book = item.listingId?.bookId;
+      return {
+        title: item.titleSnapshot,
+        condition: item.conditionSnapshot,
+        pricePaise: item.pricePaiseSnapshot,
+        quantity: item.quantity,
+        book: book?._id ? { _id: book._id, coverUrl: book.coverUrl } : null,
+      };
+    }),
+  };
+}
+
+function findOwnOrder(req) {
+  return Order.findOne({ _id: req.params.id, buyerId: req.userId }).populate('sellerId', 'name').populate(WITH_BOOKS).lean();
+}
+
+router.get('/', async (req, res) => {
+  const orders = await Order.find({ buyerId: req.userId })
+    .sort({ createdAt: -1 })
+    .populate('sellerId', 'name')
+    .populate(WITH_BOOKS)
+    .lean();
+  res.json(orders.map(orderView));
+});
+
+router.get('/:id', async (req, res) => {
+  // another buyer's order gets the same 404 as a missing one
+  const order = mongoose.isValidObjectId(req.params.id) ? await findOwnOrder(req) : null;
+  if (!order) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+  res.json(orderView(order));
+});
+
+/**
+ * Cancel and restock in one transaction so the copies can't be lost or counted twice.
+ * The status filter on the update stops a cancel racing the seller marking it shipped.
+ */
+router.post('/:id/cancel', async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const order = await Order.findOne({ _id: req.params.id, buyerId: req.userId }).session(session);
+      if (!order) {
+        throw new OrderError(404, 'Order not found');
+      }
+      const result = await Order.updateOne(
+        { _id: order._id, buyerId: req.userId, status: 'placed' },
+        { $set: { status: 'cancelled' } },
+        { session },
+      );
+      if (result.modifiedCount !== 1) {
+        throw new OrderError(409, `This order is already ${order.status}, so it can't be cancelled.`);
+      }
+      for (const item of order.items) {
+        await Listing.updateOne({ _id: item.listingId }, { $inc: { quantity: item.quantity } }, { session });
+      }
+    });
+  } catch (err) {
+    if (err instanceof OrderError) {
+      return res.status(err.status).json({ error: err.message });
+    }
+    throw err;
+  } finally {
+    await session.endSession();
+  }
+
+  res.json(orderView(await findOwnOrder(req)));
+});
+
+const COMMENT_MAX = 300;
+
+router.post('/:id/rating', async (req, res) => {
+  const stars = Number(req.body.stars);
+  const comment = typeof req.body.comment === 'string' ? req.body.comment.trim() : '';
+  const errors = {};
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+    errors.stars = 'Pick 1 to 5 stars';
+  }
+  if (comment.length > COMMENT_MAX) {
+    errors.comment = `Comment can be at most ${COMMENT_MAX} characters`;
+  }
+  if (Object.keys(errors).length) {
+    return res.status(400).json({ errors });
+  }
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const order = await Order.findOne({ _id: req.params.id, buyerId: req.userId }).session(session);
+      if (!order) {
+        throw new OrderError(404, 'Order not found');
+      }
+      if (order.rating) {
+        throw new OrderError(409, 'You have already rated this order.');
+      }
+      if (order.status !== 'delivered') {
+        throw new OrderError(400, 'You can rate the seller once the order is delivered.');
+      }
+      // rating: null in the filter means a double click can't add the stars to the seller twice
+      const result = await Order.updateOne(
+        { _id: order._id, buyerId: req.userId, status: 'delivered', rating: null },
+        { $set: { rating: { stars, comment, createdAt: new Date() } } },
+        { session },
+      );
+      if (result.modifiedCount !== 1) {
+        throw new OrderError(409, 'You have already rated this order.');
+      }
+      await User.updateOne({ _id: order.sellerId }, { $inc: { ratingSum: stars, ratingCount: 1 } }, { session });
+    });
+  } catch (err) {
+    if (err instanceof OrderError) {
+      return res.status(err.status).json({ error: err.message });
+    }
+    throw err;
+  } finally {
+    await session.endSession();
+  }
+
+  res.status(201).json(orderView(await findOwnOrder(req)));
 });
 
 export default router;

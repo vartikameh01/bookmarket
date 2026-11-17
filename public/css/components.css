@@ -1459,3 +1459,294 @@ a.row__title:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* orders */
+
+.thumb-stack {
+  display: grid;
+  width: 3.5rem;
+}
+
+.thumb-stack > .row__thumb {
+  grid-area: 1 / 1;
+}
+
+.thumb-stack > .row__thumb + .row__thumb {
+  transform: translate(6px, -6px) rotate(4deg);
+  z-index: -1;
+}
+
+.banner {
+  display: grid;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: color-mix(in srgb, var(--success) 10%, var(--card));
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius);
+  animation: rise 0.35s ease both;
+}
+
+.banner h2 {
+  font-size: 1.2rem;
+  color: var(--success);
+}
+
+.order-detail {
+  display: grid;
+  gap: var(--space-5) var(--space-6);
+  align-items: start;
+}
+
+.order-detail > div {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 60rem) {
+  .order-detail {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
+.address {
+  margin-top: var(--space-2);
+  font-style: normal;
+  line-height: 1.5;
+}
+
+/* placed, shipped, delivered as stops on a line */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  position: relative;
+  padding-top: 1.6rem;
+  font-size: 0.875rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  top: 0.35rem;
+  left: 50%;
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--card);
+  border: 2px solid var(--rule);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.timeline li + li::after {
+  content: '';
+  position: absolute;
+  top: 0.7rem;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--rule);
+}
+
+.timeline li.is-done {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.timeline li.is-done::before {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.timeline li.is-done::after {
+  background: var(--green);
+}
+
+.timeline--cancelled {
+  display: block;
+}
+
+.timeline--cancelled li {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  border: 1px dashed var(--rule);
+  border-radius: var(--radius);
+}
+
+.timeline--cancelled li::before {
+  display: none;
+}
+
+/* rating a seller */
+
+.rating-box {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+}
+
+.rating-box h2 {
+  font-size: 1.2rem;
+}
+
+.given-rating .stars {
+  font-size: 1.4rem;
+  color: var(--mustard);
+}
+
+.star-input {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.star-input legend {
+  margin-bottom: var(--space-1);
+  font-weight: 600;
+}
+
+/* inputs run 5 to 1 in the dom and show reversed, so a checked or hovered star lights every lower one through ~ */
+.star-input__stars {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+.star-input__stars input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.star-input__stars label {
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--rule);
+  cursor: pointer;
+  transition: color 0.12s ease, transform 0.12s ease;
+}
+
+.star-input__stars input:checked ~ label,
+.star-input__stars label:hover,
+.star-input__stars label:hover ~ label {
+  color: var(--mustard);
+}
+
+.star-input__stars label:hover {
+  transform: scale(1.12);
+}
+
+.star-input__stars input:focus-visible + label {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.star-input[aria-invalid='true'] label {
+  color: color-mix(in srgb, var(--danger) 35%, var(--rule));
+}
+
+/* sales */
+
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-5);
+}
+
+.stat-card {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  animation: rise 0.35s ease both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+}
+
+.stat-card dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.stat-card dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.stat-card dd small,
+.stat-card > small {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.stat-card--earned {
+  border-top: 3px solid var(--green);
+}
+
+.stat-card--pending {
+  border-top: 3px solid var(--mustard);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+.tabs a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: -1px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+
+.tabs a:hover {
+  color: var(--ink);
+}
+
+.tabs a[aria-current='page'] {
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom-color: var(--stamp);
+}
+
+.tabs .count {
+  min-width: 1.4rem;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
+  text-align: center;
+  background: var(--paper-deep);
+  border-radius: 999px;
+}
+
+.sale-address {
+  font-size: 0.875rem;
+  color: var(--ink);
+}

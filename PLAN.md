@@ -419,18 +419,18 @@ Steps 1 to 5 were done on 4 Nov and work paused until 16 Nov, so the dates below
     **Check:** invalid card details or a missing pincode block the Pay button.
 26. [x] **Place order.** `POST /api/orders` runs the transaction from section 7: decrement stock, one order per seller with a shared `checkoutId`, `paymentRef` like `MOCK-8F3K2A`, empty the cart. Out of stock returns 409 with the book's title. Then redirect to `orders.html?checkout=<id>`, which highlights the new orders.
     **Check:** log in as two buyers in two browsers, both with the last copy in the cart, and pay in both. One succeeds, the other gets the 409 message, and stock in the database is 0, not negative.
-27. [ ] **Orders pages.** `orders.html` (newest first, seller, status badge, total) and `order.html` (items, shipping address, status, Cancel button while Placed). `POST /orders/:id/cancel` is a transaction that sets `cancelled` and restocks.
+27. [x] **Orders pages.** `orders.html` (newest first, seller, status badge, total) and `order.html` (items, shipping address, status, Cancel button while Placed). `POST /orders/:id/cancel` is a transaction that sets `cancelled` and restocks.
     **Check:** cancel an order and the listing's quantity goes back up.
 
 ### 29 to 30 Nov: seller side and ratings
 
 **30 Nov milestone:** the college's 20% deadline. Show the supervisor the buying and selling flow running locally and note their feedback in the weekly progress log.
 
-28. [ ] **Sales.** `GET /api/sales` (filter by status), `PATCH /api/sales/:orderId` allowing only Placed → Shipped → Delivered. `seller/sales.html` with status tabs, buyer address and the action button.
+28. [x] **Sales.** `GET /api/sales` (filter by status), `PATCH /api/sales/:orderId` allowing only Placed → Shipped → Delivered. `seller/sales.html` with status tabs, buyer address and the action button.
     **Check:** marking another seller's order returns 404, and jumping from Placed straight to Delivered returns 400.
-29. [ ] **Earnings summary.** `GET /api/sales/summary` aggregation (earned from delivered, pending from placed and shipped, order count, average rating) shown as cards at the top of the sales page.
+29. [x] **Earnings summary.** `GET /api/sales/summary` aggregation (earned from delivered, pending from placed and shipped, order count, average rating) shown as cards at the top of the sales page.
     **Check:** the numbers match the orders listed below them.
-30. [ ] **Ratings.** `POST /api/orders/:id/rating` takes 1 to 5 stars and a comment of up to 300 characters, only for the buyer's own delivered and unrated order, and `$inc`s the seller's `ratingSum` and `ratingCount`. Star form on `order.html`.
+30. [x] **Ratings.** `POST /api/orders/:id/rating` takes 1 to 5 stars and a comment of up to 300 characters, only for the buyer's own delivered and unrated order, and `$inc`s the seller's `ratingSum` and `ratingCount`. Star form on `order.html`.
     **Check:** the new rating changes the seller's average on the book page, and rating the same order again returns 409.
 
 ### 1 Dec: buffer
