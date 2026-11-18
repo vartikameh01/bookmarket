@@ -36,3 +36,4 @@ The seed creates `seller1@example.com` to `seller4@example.com` and `buyer@examp
 - 17 Nov 2026: profile page, polish pass (loading and empty states, 404 page, mobile layout) and a full manual walkthrough including the security spot checks.
 - 17 Nov 2026: production check of a clean install, plus a Render blueprint (`render.yaml`) pinned to Node 24 in the Singapore region.
 - 17 Nov 2026: report screenshots, architecture and data model diagrams, slide draft, and the book page now shows wide covers whole instead of cropping them.
+- 18 Nov 2026: deployed on Render at https://bookmarket-1.onrender.com, backed by a MongoDB Atlas cluster seeded with the demo data.

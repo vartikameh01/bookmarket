@@ -448,7 +448,7 @@ Catch up on anything that slipped and act on the supervisor's feedback from the 
 
 ### 4 Dec: deploy
 
-34. [ ] **GitHub and Render.** The GitHub repo is done (step 2). Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New > Blueprint from that repo. `render.yaml` sets up a free web service in Singapore (closest to the Mumbai cluster) with `npm ci`, `npm start`, Node 24, `NODE_ENV=production`, a generated `SESSION_SECRET` and the `/api/health` health check, and asks for `MONGODB_URI`, where you paste the Atlas string.
+34. [x] **GitHub and Render.** The GitHub repo is done (step 2). Create a free MongoDB Atlas M0 cluster (Mumbai region) with a database user, add `0.0.0.0/0` under Network Access, and copy its connection string with `bookmarket` as the database name. Then on Render, New > Blueprint from that repo. `render.yaml` sets up a free web service in Singapore (closest to the Mumbai cluster) with `npm ci`, `npm start`, Node 24, `NODE_ENV=production`, a generated `SESSION_SECRET` and the `/api/health` health check, and asks for `MONGODB_URI`, where you paste the Atlas string.
     **Check:** the live URL loads, and login survives a refresh (this proves the secure cookie and `trust proxy` are right).
 35. [ ] **Live test.** Seed Atlas with `MONGODB_URI='<atlas uri>' npm run seed`, then go through the whole demo script on a phone using the live URL.
     **Check:** the demo works start to finish on the phone.
