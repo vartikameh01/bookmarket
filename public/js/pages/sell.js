@@ -1,7 +1,6 @@
 import { requireUser } from '../header.js';
 import { api } from '../api.js';
-import { escapeHtml, setFieldError, showFieldErrors } from '../ui.js';
-import { coverHtml } from '../render.js';
+import { setFieldError, showFieldErrors } from '../ui.js';
 import { normalizeIsbn, toIsbn13 } from '../shared/isbn.js';
 import { NOTES_MAX, validateListing } from '../shared/validate-listing.js';
 
@@ -15,15 +14,17 @@ const genreField = document.querySelector('#genre-field');
 const quantityField = document.querySelector('#quantity-field');
 const usedNote = document.querySelector('#used-note');
 const notesCount = document.querySelector('#sell-notes-count');
-const preview = document.querySelector('#book-preview');
+const newBookFields = document.querySelector('#new-book-fields');
 const formError = form.querySelector('.form-error');
 const submit = form.querySelector('[type="submit"]');
 
 const LOOKUP_DELAY_MS = 400;
-const OTHER_FIELDS = ['genreId', 'condition', 'price', 'quantity', 'notes'];
+const OTHER_FIELDS = ['title', 'author', 'genreId', 'condition', 'price', 'quantity', 'notes'];
 
+// the book already on Bookmarket for this ISBN, or null
 let book = null;
-let genres = [];
+// true once we know the ISBN is valid but not on Bookmarket yet, so the seller types the title and author
+let isNewBook = false;
 let lookupTimer;
 // bumped on every keystroke so a slow lookup for an old ISBN can't overwrite a newer one
 let lookupSeq = 0;
@@ -48,46 +49,23 @@ function setIsbnState(kind, message = '', retry = false) {
   }
 }
 
-function genreName(id) {
-  return genres.find((g) => g._id === id)?.name;
-}
-
-function renderPreview() {
-  if (!book) {
-    preview.className = 'book-preview';
-    preview.innerHTML = `<p class="book-preview__empty">The book's title, author and cover appear here once the ISBN checks out.</p>`;
-    return;
-  }
-  const details = [
-    ['Author', book.author],
-    ['Publisher', book.publisher],
-    ['Year', book.publishedYear],
-    ['Pages', book.pages],
-    ['Genre', genreName(book.genreId)],
-    ['ISBN', book.isbn13],
-  ].filter(([, v]) => v);
-  preview.className = 'book-preview book-preview--found';
-  preview.innerHTML = `
-    <div class="book-preview__cover">${coverHtml(book)}</div>
-    <h2>${escapeHtml(book.title)}</h2>
-    <dl>${details.map(([k, v]) => `<dt>${k}</dt><dd>${escapeHtml(v)}</dd>`).join('')}</dl>`;
-}
-
 // runs the shared validator on every change, shows errors for touched fields and unlocks submit only when all is well
 function refresh() {
   const condition = form.elements.condition.value;
   quantityField.hidden = condition !== 'new';
   usedNote.hidden = !condition || condition === 'new';
-  genreField.hidden = !book || Boolean(book.genreId);
+  newBookFields.hidden = !isNewBook;
+  genreField.hidden = !isNewBook && !(book && !book.genreId);
   notesCount.textContent = `${form.elements.notes.value.length} / ${NOTES_MAX}`;
 
-  const { errors } = validateListing(values(), { needsGenre: !book?.genreId });
+  const { errors } = validateListing(values(), { needsGenre: !book?.genreId, newBook: isNewBook });
   for (const name of OTHER_FIELDS) {
     setFieldError(form, name, touched.has(name) ? errors[name] : '');
   }
-  submit.disabled = !book || Object.keys(errors).length > 0;
+  submit.disabled = !(book || isNewBook) || Object.keys(errors).length > 0;
 }
 
+// asks our own server whether this ISBN is already on Bookmarket
 async function lookup(isbn13) {
   const seq = lookupSeq;
   try {
@@ -99,17 +77,18 @@ async function lookup(isbn13) {
     if (book.genreId) {
       genreSelect.value = book.genreId;
     }
-    setIsbnState('ok', `Found on Open Library: ${book.title}`);
+    setIsbnState('ok', `Already on Bookmarket: ${book.title} by ${book.author}`);
   } catch (err) {
     if (seq !== lookupSeq) {
       return;
     }
-    setIsbnState('error', err.message);
-    if (err.status === 503 || err.status === 0) {
+    if (err.status === 404) {
+      isNewBook = true;
+      setIsbnState('new', "New book on Bookmarket. Type its title and author below.");
+    } else {
       setIsbnState('error', err.message, true);
     }
   }
-  renderPreview();
   refresh();
 }
 
@@ -119,12 +98,12 @@ isbnInput.addEventListener('input', () => {
   lookupSeq++;
   clearTimeout(lookupTimer);
   book = null;
-  renderPreview();
+  isNewBook = false;
 
   if (!raw) {
     setIsbnState('');
   } else if (isbn13) {
-    setIsbnState('loading', 'Checking Open Library…');
+    setIsbnState('loading', 'Checking…');
     lookupTimer = setTimeout(() => lookup(isbn13), LOOKUP_DELAY_MS);
   } else if (raw.length >= 13 || (raw.length === 10 && !/^97[89]/.test(raw))) {
     // a full length ISBN that fails the checksum is rejected straight away, without any network call
@@ -184,9 +163,8 @@ form.addEventListener('submit', async (event) => {
   }
 });
 
-genres = await api('/genres');
+const genres = await api('/genres');
 genreSelect.append(...genres.map((g) => new Option(g.name, g._id)));
-renderPreview();
 // the book page links here with ?isbn= so a seller can list a copy of that book straight away
 isbnInput.value ||= new URLSearchParams(location.search).get('isbn') || '';
 // a pasted or remembered ISBN is already in the box when the page loads

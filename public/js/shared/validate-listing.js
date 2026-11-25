@@ -7,6 +7,8 @@ export const PRICE_MIN = 10;
 export const PRICE_MAX = 10000;
 export const QUANTITY_MAX = 100;
 export const NOTES_MAX = 500;
+export const TITLE_MAX = 200;
+export const AUTHOR_MAX = 200;
 
 const OBJECT_ID = /^[a-f\d]{24}$/i;
 
@@ -27,8 +29,9 @@ function toWholeNumber(value) {
  * Returns { value, errors }. value holds only clean fields ready to save, with the price in paise.
  * Pass existing: { condition } when editing, which skips isbn, genre and condition and only checks the fields sent.
  * Pass needsGenre: false when the book already has a genre, because only the first seller picks it.
+ * Pass newBook: true when the ISBN isn't on Bookmarket yet, so the seller has to type the title and author.
  */
-export function validateListing(input = {}, { existing = null, needsGenre = true } = {}) {
+export function validateListing(input = {}, { existing = null, needsGenre = true, newBook = false } = {}) {
   const value = {};
   const errors = {};
   const editing = Boolean(existing);
@@ -42,6 +45,26 @@ export function validateListing(input = {}, { existing = null, needsGenre = true
       errors.isbn = "This isn't a valid ISBN. Check it for a typo.";
     } else {
       value.isbn13 = isbn13;
+    }
+
+    if (newBook) {
+      // squash repeated spaces so "The  C   Language" is saved neatly
+      const title = String(input.title ?? '').trim().replace(/\s+/g, ' ');
+      const author = String(input.author ?? '').trim().replace(/\s+/g, ' ');
+      if (!title) {
+        errors.title = 'Enter the book title';
+      } else if (title.length > TITLE_MAX) {
+        errors.title = `Title can be at most ${TITLE_MAX} characters`;
+      } else {
+        value.title = title;
+      }
+      if (!author) {
+        errors.author = 'Enter the author';
+      } else if (author.length > AUTHOR_MAX) {
+        errors.author = `Author can be at most ${AUTHOR_MAX} characters`;
+      } else {
+        value.author = author;
+      }
     }
 
     if (needsGenre) {

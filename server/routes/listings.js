@@ -11,15 +11,11 @@ const router = Router();
 router.use(requireAuth);
 
 router.post('/', async (req, res) => {
-  // find the book first because the genre is only asked for when the book doesn't have one yet
+  // find the book first: a new ISBN needs a title, author and genre, a known one only a genre if it has none yet
   const isbn13 = toIsbn13(req.body.isbn);
-  const book = isbn13 ? await Book.findOne({ isbn13 }) : null;
+  let book = isbn13 ? await Book.findOne({ isbn13 }) : null;
 
-  const { value, errors } = validateListing(req.body, { needsGenre: !book?.genreId });
-  if (isbn13 && !book) {
-    // the lookup route is the only way a book gets into the collection
-    errors.isbn = 'Look this ISBN up first so we can check it on Open Library';
-  }
+  const { value, errors } = validateListing(req.body, { needsGenre: !book?.genreId, newBook: !book });
   if (value.genreId && !(await Genre.exists({ _id: value.genreId }))) {
     errors.genreId = 'Pick a genre from the list';
   }
@@ -27,8 +23,19 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ errors });
   }
 
-  if (value.genreId) {
-    // the filter keeps the first seller's choice if two sellers list a new book at the same moment
+  if (!book) {
+    // the first seller of an ISBN creates the book from what they typed
+    try {
+      book = await Book.create({ isbn13, title: value.title, author: value.author, genreId: value.genreId });
+    } catch (err) {
+      // two sellers listing the same new ISBN at once both reach create, and the unique index lets only one win
+      if (err.code !== 11000) {
+        throw err;
+      }
+      book = await Book.findOne({ isbn13 });
+    }
+  } else if (value.genreId) {
+    // the filter keeps the first seller's choice if two sellers pick a genre at the same moment
     await Book.updateOne({ _id: book._id, genreId: null }, { $set: { genreId: value.genreId } });
   }
 
@@ -54,7 +61,7 @@ function findOwnListing(req) {
   return Listing.findOne({ _id: req.params.id, sellerId: req.userId, status: NOT_REMOVED() });
 }
 
-const BOOK_FIELDS = 'title author isbn13 coverUrl';
+const BOOK_FIELDS = 'title author isbn13';
 
 router.get('/mine', async (req, res) => {
   const listings = await Listing.find({ sellerId: req.userId, status: NOT_REMOVED() })

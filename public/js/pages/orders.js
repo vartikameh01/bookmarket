@@ -1,19 +1,12 @@
 import { requireUser } from '../header.js';
 import { api } from '../api.js';
 import { escapeHtml, formatPrice } from '../ui.js';
-import { formatDate, orderNumber, statusBadge, thumbHtml } from '../render.js';
+import { formatDate, orderNumber, statusBadge } from '../render.js';
 
 await requireUser();
 
 const container = document.querySelector('#orders-list');
 const checkoutId = new URLSearchParams(location.search).get('checkout');
-
-function thumbsHtml(order) {
-  return `<div class="thumb-stack">${order.items
-    .slice(0, 2)
-    .map((item) => thumbHtml({ title: item.title, coverUrl: item.book?.coverUrl }))
-    .join('')}</div>`;
-}
 
 function rowHtml(order) {
   const count = order.items.reduce((sum, item) => sum + item.quantity, 0);
@@ -21,7 +14,6 @@ function rowHtml(order) {
   const isNew = order.checkoutId === checkoutId;
   return `
     <li class="row${isNew ? ' is-highlighted' : ''}">
-      ${thumbsHtml(order)}
       <div class="row__main">
         <a class="row__title" href="/order.html?id=${order._id}">${escapeHtml(titles)}</a>
         <div class="row__meta">

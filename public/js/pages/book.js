@@ -1,7 +1,7 @@
 import { getCurrentUser } from '../header.js';
 import { api, loginUrl } from '../api.js';
 import { escapeHtml, formatPrice, toast } from '../ui.js';
-import { conditionBadge, coverHtml, starsHtml } from '../render.js';
+import { conditionBadge, starsHtml } from '../render.js';
 
 const container = document.querySelector('#book');
 const id = new URLSearchParams(location.search).get('id') || '';
@@ -99,7 +99,6 @@ const facts = [
 const cheapest = book.offers[0];
 container.innerHTML = `
   <article class="book-detail">
-    <div class="book-detail__cover">${coverHtml(book)}</div>
     <div>
       <h1>${escapeHtml(book.title)}</h1>
       <p class="book-detail__author">by ${escapeHtml(book.author)}</p>

@@ -1,7 +1,7 @@
 import { requireUser } from '../header.js';
 import { api } from '../api.js';
 import { escapeHtml, formatPrice, setFieldError, showFieldErrors, toast } from '../ui.js';
-import { conditionBadge, formatDate, orderNumber, statusBadge, thumbHtml } from '../render.js';
+import { conditionBadge, formatDate, orderNumber, statusBadge } from '../render.js';
 
 await requireUser();
 
@@ -25,7 +25,6 @@ function itemHtml(item) {
     : `<span class="row__title">${escapeHtml(item.title)}</span>`;
   return `
     <li class="row">
-      ${thumbHtml({ title: item.title, coverUrl: item.book?.coverUrl })}
       <div class="row__main">
         ${title}
         <div class="row__meta">${conditionBadge(item.condition)} <span>${formatPrice(item.pricePaise)} × ${item.quantity}</span></div>

@@ -54,7 +54,7 @@ Two columns.
 - Profile with saved address and password change
 
 **Seller**
-- Sell a book by typing its ISBN: details and cover fill in automatically
+- Sell a book by its ISBN: if it is already on Bookmarket the title and author fill in, otherwise the seller types them
 - New copies with stock, used copies as single items
 - My listings: edit price, stock and notes, pause or remove
 - Sales: buyer address, mark shipped, mark delivered
@@ -74,7 +74,6 @@ Notes: one account can both buy and sell, and "Sell a book" is always in the hea
 | Backend | Node.js 24, Express 5 |
 | Database | MongoDB 8 (Docker locally, Atlas when deployed), Mongoose 9 |
 | Auth | express-session with connect-mongo, bcryptjs |
-| Book data | Open Library API |
 | Hosting | Render (Singapore) and MongoDB Atlas (Mumbai) |
 
 **Why no framework**
@@ -95,7 +94,7 @@ Image: `diagrams/architecture.png` full slide.
 Notes:
 - The browser loads static pages from Express, then every page talks to the REST API through one `api.js` fetch wrapper.
 - Login is an httpOnly session cookie, and sessions live in MongoDB so a restart doesn't log anyone out.
-- The server calls Open Library only when a seller types an ISBN we haven't seen. The result is saved in `books`, so each ISBN is fetched once.
+- The app needs no outside service: the first seller of an ISBN creates its book, and later sellers reuse it.
 - Render runs in Singapore because it's the closest region to the Atlas cluster in Mumbai, and a checkout makes several database round trips.
 
 ---
@@ -119,8 +118,8 @@ Money is stored in whole paise (₹499 is 49900) to avoid floating point errors.
 Three layers, shown as three stacked boxes.
 
 1. **Browser, instant.** HTML attributes plus the shared validator on every keystroke. ISBN checksum is checked before any network call. Submit stays disabled until everything is valid.
-2. **Server, final authority.** The same `validate-listing.js` file runs again on the server, because a request can skip the browser. Title and author are never accepted from the client.
-3. **Open Library lookup.** The ISBN must be a real book. Unknown ISBNs can't be listed, and the details come from the lookup.
+2. **Server, final authority.** The same `validate-listing.js` file runs again on the server, because a request can skip the browser. Title and author are only accepted for an ISBN that isn't on Bookmarket yet.
+3. **Database check.** A known ISBN reuses the existing book, so every seller's offer lands on the same page. A new ISBN also needs a title, author and genre, and the unique index on `isbn13` stops two sellers creating the same book twice.
 
 Plus a last safety net: the Mongoose schema repeats the min, max and enum rules.
 
@@ -180,14 +179,12 @@ Notes: every page was checked at 375 px wide, and there are loading, empty and e
 
 | Challenge | Solution |
 |---|---|
-| Open Library is a wiki, and a spam edition claimed our demo ISBN on its search endpoint | Switched to the exact `/isbn/<isbn>.json` record and treat records without a named author as not found |
-| Open Library took 4 to 12 seconds per request in November | 10 second timeout, every found book cached in our own database, 503 with a friendly message when it's down |
+| An outside book API (Open Library) was slow (4 to 12 seconds) and open to spam edits | Removed it: sellers type the title and author for a new ISBN, and books are shared by ISBN in our own database |
 | Transactions don't work on a plain MongoDB | Run MongoDB in Docker as a single node replica set locally, and Atlas in production |
 | Mongoose `sanitizeFilter` also blocked our own query operators like `$gte` | Wrap the trusted ones with `mongoose.trusted()` |
 | Mongoose skips some schema rules on `updateOne`, so a used listing could be edited above one copy | The edit route runs the shared validator with the listing's condition |
-| Book covers come in different shapes | The book page frame takes the real cover's shape once it loads |
 
-Notes: pick two to talk through. The Open Library spam story is the most memorable one.
+Notes: pick two to talk through. Dropping the slow outside book API and the checkout transaction are the easiest to explain.
 
 ---
 
@@ -196,7 +193,7 @@ Notes: pick two to talk through. The Open Library spam story is the most memorab
 **Future scope**
 - Real payments with Razorpay test mode and seller payouts
 - Seller photos of their actual copy
-- Manual entry for books Open Library doesn't know, with admin approval
+- Book cover images, uploaded by sellers or fetched from an online catalogue
 - Admin page, listing reports and user blocking
 - Wishlist with "a cheaper copy is now listed" alerts
 - Email notifications and buyer to seller chat

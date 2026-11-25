@@ -14,7 +14,7 @@
   <main id="main" class="page page-width" tabindex="-1">
     <div class="page-head">
       <h1>Sell a book</h1>
-      <p class="muted">Type the ISBN and we fill in the rest from Open Library.</p>
+      <p class="muted">Type the ISBN first. If the book is already on Bookmarket we fill in its title and author.</p>
     </div>
 
     <div class="sell">
@@ -28,6 +28,20 @@
           <p class="field__hint" id="sell-isbn-hint">10 or 13 digits, usually on the back cover above the barcode. Hyphens are fine.</p>
           <p class="isbn-status" id="sell-isbn-status" aria-live="polite"></p>
           <p class="field__error" id="sell-isbn-error"></p>
+        </div>
+
+        <div class="field-row" id="new-book-fields" hidden>
+          <div class="field">
+            <label for="sell-title">Title</label>
+            <input id="sell-title" name="title" type="text" maxlength="200" required aria-describedby="sell-title-error">
+            <p class="field__error" id="sell-title-error"></p>
+          </div>
+          <div class="field">
+            <label for="sell-author">Author</label>
+            <input id="sell-author" name="author" type="text" maxlength="200" required aria-describedby="sell-author-hint sell-author-error">
+            <p class="field__hint" id="sell-author-hint">For several authors, separate them with commas.</p>
+            <p class="field__error" id="sell-author-error"></p>
+          </div>
         </div>
 
         <div class="field" id="genre-field" hidden>
@@ -91,10 +105,6 @@
 
         <button class="btn btn--primary" type="submit" disabled>List this book</button>
       </form>
-
-      <aside class="book-preview" id="book-preview" aria-live="polite">
-        <p class="book-preview__empty">The book's title, author and cover appear here once the ISBN checks out.</p>
-      </aside>
     </div>
   </main>
 </body>

@@ -116,7 +116,6 @@ router.get('/', async (req, res) => {
               isbn13: '$book.isbn13',
               title: '$book.title',
               author: '$book.author',
-              coverUrl: '$book.coverUrl',
               genreId: '$book.genreId',
               minPricePaise: 1,
               offerCount: 1,

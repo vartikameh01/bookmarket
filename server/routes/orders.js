@@ -118,11 +118,11 @@ router.post('/', async (req, res) => {
   res.status(201).json({ checkoutId, orderIds: orders.map((o) => o._id), paymentRef });
 });
 
-// covers come from the listing's book, so an order still shows them even after the listing is removed
+// the book id comes from the listing, so an order can still link to the book page after the listing is removed
 export const WITH_BOOKS = {
   path: 'items.listingId',
   select: 'bookId',
-  populate: { path: 'bookId', select: 'coverUrl' },
+  populate: { path: 'bookId', select: '_id' },
 };
 
 // the shape both the buyer and seller pages read, with snapshot names shortened
@@ -147,7 +147,7 @@ export function orderView(order) {
         condition: item.conditionSnapshot,
         pricePaise: item.pricePaiseSnapshot,
         quantity: item.quantity,
-        book: book?._id ? { _id: book._id, coverUrl: book.coverUrl } : null,
+        book: book?._id ? { _id: book._id } : null,
       };
     }),
   };

@@ -1,7 +1,7 @@
 import { requireUser } from '../header.js';
 import { api } from '../api.js';
 import { escapeHtml, formatPrice, toast } from '../ui.js';
-import { formatDate, orderNumber, statusBadge, thumbHtml } from '../render.js';
+import { formatDate, orderNumber, statusBadge } from '../render.js';
 
 await requireUser();
 
@@ -37,7 +37,6 @@ function rowHtml(order) {
     : '';
   return `
     <li class="row" data-id="${order._id}">
-      ${thumbHtml({ title: order.items[0].title, coverUrl: order.items[0].book?.coverUrl })}
       <div class="row__main">
         <span class="row__title">${escapeHtml(titles)}</span>
         <div class="row__meta">
