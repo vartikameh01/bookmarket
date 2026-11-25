@@ -9,14 +9,14 @@
   top: -3rem;
   z-index: 100;
   padding: var(--space-2) var(--space-4);
-  background: var(--ink);
-  color: var(--card);
+  background: var(--text);
+  color: var(--surface);
   border-radius: var(--radius);
 }
 
 .skip-link:focus {
   top: var(--space-2);
-  color: var(--card);
+  color: var(--surface);
 }
 
 /* header */
@@ -25,8 +25,8 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--paper);
-  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .site-header__inner {
@@ -45,12 +45,12 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--ink);
+  color: var(--text);
   text-decoration: none;
 }
 
 .brand:hover {
-  color: var(--ink);
+  color: var(--text);
 }
 
 .brand__mark {
@@ -59,16 +59,16 @@
   width: 2.1rem;
   height: 2.1rem;
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.25rem;
-  color: var(--card);
-  background: var(--stamp);
+  color: var(--surface);
+  background: var(--primary);
   border-radius: 50%;
 }
 
 .brand__name {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.35rem;
   letter-spacing: -0.02em;
 }
@@ -96,16 +96,16 @@
 }
 
 .site-nav a:not(.btn) {
-  color: var(--ink);
+  color: var(--text);
   text-decoration: none;
 }
 
 .site-nav a:not(.btn):hover {
-  color: var(--stamp);
+  color: var(--primary);
 }
 
 .site-nav__user {
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 @media (min-width: 52rem) {
@@ -131,7 +131,7 @@
   gap: var(--space-2) var(--space-4);
   margin-bottom: var(--space-5);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--border);
 }
 
 .stack > * + * {
@@ -154,10 +154,10 @@
 /* footer */
 
 .site-footer {
-  border-top: 1px solid var(--rule);
-  background: var(--paper-deep);
+  border-top: 1px solid var(--border);
+  background: var(--bg-soft);
   font-size: 0.9rem;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 .site-footer__inner {
@@ -171,7 +171,7 @@
 .site-footer__brand {
   font-family: var(--font-display);
   font-weight: 600;
-  color: var(--ink);
+  color: var(--text);
 }
 
 .site-footer nav {
@@ -181,7 +181,7 @@
 }
 
 .site-footer a {
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 /* account dropdown in the header */
@@ -209,7 +209,7 @@
 .account-menu summary::after {
   content: '▾';
   font-size: 0.8em;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 .account-menu__list {
@@ -219,8 +219,8 @@
   display: grid;
   min-width: 11rem;
   padding: var(--space-2);
-  background: var(--card);
-  border: 1px solid var(--rule);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lift);
 }
@@ -237,12 +237,12 @@
 
 .account-menu__list a:hover,
 .account-menu__list button:hover {
-  color: var(--ink);
-  background: var(--paper-deep);
+  color: var(--text);
+  background: var(--bg-soft);
 }
 
 .account-menu__list button {
   margin-top: var(--space-1);
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--border);
   border-radius: 0 0 4px 4px;
 }

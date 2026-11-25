@@ -1,24 +1,23 @@
-/* imported here so every page gets the fonts from one place */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Instrument+Sans:wght@400;500;600&display=swap');
-
+/* every colour the site uses is defined here, so the whole look can be changed from one place */
 :root {
-  --paper: #f5efe3;
-  --paper-deep: #ebe2d0;
-  --card: #fffaf0;
-  --ink: #1d1a16;
-  --ink-soft: #5a5247;
-  --rule: #d6cab3;
-  --stamp: #a3341f;
-  --stamp-deep: #7f2414;
-  --green: #2e5b4b;
-  --teal: #2d6a73;
-  --mustard: #b9851a;
-  --clay: #9a5a3c;
-  --danger: #b3261e;
-  --success: #2e6b3a;
+  --bg: #ffffff;
+  --bg-soft: #f3f4f6;
+  --surface: #ffffff;
+  --text: #111827;
+  --text-soft: #6b7280;
+  --border: #e5e7eb;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --green: #15803d;
+  --blue: #2563eb;
+  --amber: #d97706;
+  --gray: #6b7280;
+  --danger: #dc2626;
+  --success: #15803d;
 
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: 'Instrument Sans', 'Segoe UI', Helvetica, sans-serif;
+  /* the computer's own font, so nothing has to be downloaded */
+  --font-display: system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-body: system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -31,8 +30,8 @@
 
   --radius: 6px;
   --radius-lg: 12px;
-  --shadow: 0 1px 0 rgba(29, 26, 22, 0.06), 0 6px 18px -8px rgba(29, 26, 22, 0.25);
-  --shadow-lift: 0 2px 0 rgba(29, 26, 22, 0.08), 0 16px 30px -12px rgba(29, 26, 22, 0.35);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-lift: 0 4px 12px rgba(0, 0, 0, 0.12);
   --page-width: 72rem;
 }
 
@@ -58,8 +57,8 @@ body {
   font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.55;
-  color: var(--ink);
-  background-color: var(--paper);
+  color: var(--text);
+  background-color: var(--bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -90,7 +89,7 @@ h4 {
 
 h1 {
   font-size: clamp(1.9rem, 1.4rem + 2.4vw, 3rem);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 h2 {
@@ -106,24 +105,24 @@ p {
 }
 
 a {
-  color: var(--stamp);
+  color: var(--primary);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
 
 a:hover {
-  color: var(--stamp-deep);
+  color: var(--primary-dark);
 }
 
 :focus-visible {
-  outline: 3px solid var(--teal);
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 ::selection {
-  background: var(--stamp);
-  color: var(--card);
+  background: var(--primary);
+  color: var(--surface);
 }
 
 .visually-hidden {
@@ -139,7 +138,7 @@ a:hover {
 }
 
 .muted {
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {
