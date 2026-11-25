@@ -1,7 +1,7 @@
 import { requireUser } from '../header.js';
 import { api } from '../api.js';
 import { escapeHtml, formatPrice, setFieldError, showFieldErrors } from '../ui.js';
-import { conditionBadge } from '../render.js';
+import { conditionBadge, thumbHtml } from '../render.js';
 import { NOTES_MAX, validateListing } from '../shared/validate-listing.js';
 
 await requireUser();
@@ -27,6 +27,7 @@ const isNew = listing.condition === 'new';
 const soldOut = listing.quantity === 0;
 container.innerHTML = `
   <div class="book-summary">
+    ${thumbHtml(listing.book)}
     <div class="row__main">
       <p class="row__title">${escapeHtml(listing.book.title)}</p>
       <p class="row__meta">${escapeHtml(listing.book.author)} · ${conditionBadge(listing.condition)}</p>

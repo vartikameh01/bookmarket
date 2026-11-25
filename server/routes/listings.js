@@ -61,7 +61,7 @@ function findOwnListing(req) {
   return Listing.findOne({ _id: req.params.id, sellerId: req.userId, status: NOT_REMOVED() });
 }
 
-const BOOK_FIELDS = 'title author isbn13';
+const BOOK_FIELDS = 'title author isbn13 coverUrl';
 
 router.get('/mine', async (req, res) => {
   const listings = await Listing.find({ sellerId: req.userId, status: NOT_REMOVED() })

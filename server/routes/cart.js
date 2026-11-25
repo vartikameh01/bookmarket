@@ -18,7 +18,7 @@ export async function loadCart(userId) {
   const user = await User.findById(userId).lean();
   const ids = user.cart.map((item) => item.listingId);
   const listings = await Listing.find({ _id: mongoose.trusted({ $in: ids }) })
-    .populate('bookId', 'title author')
+    .populate('bookId', 'title author coverUrl')
     .populate('sellerId', 'name')
     .lean();
   const byId = new Map(listings.map((l) => [String(l._id), l]));
@@ -62,6 +62,7 @@ function groupBySeller(lines) {
       bookId: listing.bookId._id,
       title: listing.bookId.title,
       author: listing.bookId.author,
+      coverUrl: listing.bookId.coverUrl,
       condition: listing.condition,
       pricePaise: listing.pricePaise,
       quantity,

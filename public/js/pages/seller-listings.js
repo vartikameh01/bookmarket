@@ -1,7 +1,7 @@
 import { requireUser } from '../header.js';
 import { api } from '../api.js';
 import { escapeHtml, formatPrice, toast } from '../ui.js';
-import { badge, conditionBadge } from '../render.js';
+import { badge, conditionBadge, thumbHtml } from '../render.js';
 
 await requireUser();
 
@@ -22,6 +22,7 @@ function rowHtml(listing) {
   const classes = ['row', paused || listing.quantity === 0 ? 'is-muted' : '', listing._id === highlightId ? 'is-highlighted' : ''];
   return `
     <li class="${classes.join(' ')}" data-id="${listing._id}">
+      ${thumbHtml(book)}
       <div class="row__main">
         <a class="row__title" href="/book.html?id=${book._id}">${escapeHtml(book.title)}</a>
         <div class="row__meta">

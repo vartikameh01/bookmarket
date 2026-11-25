@@ -13,6 +13,8 @@ const bookSchema = new Schema(
     publisher: { type: String, trim: true, default: '' },
     publishedYear: { type: Number, default: null },
     pages: { type: Number, min: 1, default: null },
+    // image link for the demo books; books added by sellers have none and show a plain title box instead
+    coverUrl: { type: String, default: '' },
     // the first seller to list the book picks this, so it starts empty
     genreId: { type: Schema.Types.ObjectId, ref: 'Genre', default: null },
   },

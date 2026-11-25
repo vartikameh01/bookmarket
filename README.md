@@ -39,3 +39,4 @@ The seed creates `seller1@example.com` to `seller4@example.com` and `buyer@examp
 - 18 Nov 2026: deployed on Render at https://bookmarket-1.onrender.com, backed by a MongoDB Atlas cluster seeded with the demo data.
 - 24 Nov 2026: simpler UI with plain colours and no decorative styling.
 - 25 Nov 2026: removed the Open Library integration and all book cover images. A seller now types the title and author for an ISBN that isn't on Bookmarket yet, and later sellers of the same ISBN reuse that book. The app no longer calls any outside service.
+- 25 Nov 2026: cover images are back for the demo books. Books added by sellers have no image and show a plain box with the title.

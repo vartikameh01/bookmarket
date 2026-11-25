@@ -92,21 +92,31 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-4);
   color: var(--text);
   text-decoration: none;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
 }
 
 .book-card:hover {
   color: var(--text);
-  border-color: var(--primary);
 }
 
-.book-card__meta {
-  margin-top: auto;
+.book-card__cover {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--bg-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.book-card__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-card:hover .book-card__cover {
+  box-shadow: var(--shadow-lift);
 }
 
 .book-card__title {
@@ -442,6 +452,74 @@ textarea[aria-invalid='true'] {
   font-size: 0.95rem;
 }
 
+/* plain stand in cover with the title, shown while a cover image loads and kept when a book has none */
+
+.book-card__cover,
+.row__thumb,
+.book-detail__cover {
+  position: relative;
+  /* the cover box is the container so the stand in's text scales with it */
+  container-type: inline-size;
+}
+
+.cover-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4cqi;
+  padding: 10cqi;
+  overflow: hidden;
+  color: var(--surface);
+  background: var(--gray);
+}
+
+.cover-fallback__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.4rem, 12cqi, 1.6rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.cover-fallback__author {
+  font-size: clamp(0.35rem, 6.5cqi, 0.85rem);
+  opacity: 0.8;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* row thumbnails are too small for the author */
+@container (max-width: 5rem) {
+  .cover-fallback__title {
+    -webkit-line-clamp: 4;
+    font-size: 0.45rem;
+  }
+
+  .cover-fallback__author {
+    display: none;
+  }
+}
+
+.cover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.cover-img.is-loaded {
+  opacity: 1;
+}
+
 /* sell form */
 
 .sell {
@@ -616,7 +694,7 @@ fieldset[aria-invalid='true'] .condition-option label {
 
 .row {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 3.5rem 1fr;
   gap: var(--space-3) var(--space-4);
   align-items: center;
   padding: var(--space-3) var(--space-4);
@@ -630,8 +708,24 @@ fieldset[aria-invalid='true'] .condition-option label {
   box-shadow: inset 4px 0 0 var(--primary), var(--shadow);
 }
 
+.row.is-muted .row__thumb,
 .row.is-muted .row__main {
   opacity: 0.6;
+}
+
+.row__thumb {
+  width: 3.5rem;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--bg-soft);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+.row__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .row__main {
@@ -672,7 +766,7 @@ a.row__title:hover {
 
 @media (min-width: 44rem) {
   .row {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 3.5rem 1fr auto;
   }
 
   .row__actions {
@@ -882,6 +976,43 @@ a.row__title:hover {
 }
 
 /* book page */
+
+.book-detail {
+  display: grid;
+  gap: var(--space-5) var(--space-7);
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  .book-detail {
+    grid-template-columns: 16rem minmax(0, 1fr);
+  }
+}
+
+.book-detail__cover {
+  width: min(16rem, 60vw);
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--bg-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+}
+
+.book-detail__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* let the frame take the real cover's shape once it loads, because cropping to 2:3 cut the edges off wide covers like Introduction to Algorithms */
+.book-detail__cover:has(.cover-img.is-loaded) {
+  aspect-ratio: auto;
+}
+
+.book-detail__cover .cover-img.is-loaded {
+  position: relative;
+  height: auto;
+}
 
 .book-detail__author {
   margin-top: var(--space-2);
@@ -1196,6 +1327,20 @@ a.row__title:hover {
 }
 
 /* orders */
+
+.thumb-stack {
+  display: grid;
+  width: 3.5rem;
+}
+
+.thumb-stack > .row__thumb {
+  grid-area: 1 / 1;
+}
+
+.thumb-stack > .row__thumb + .row__thumb {
+  transform: translate(6px, -6px);
+  z-index: -1;
+}
 
 .banner {
   display: grid;

@@ -193,7 +193,7 @@ Notes: pick two to talk through. Dropping the slow outside book API and the chec
 **Future scope**
 - Real payments with Razorpay test mode and seller payouts
 - Seller photos of their actual copy
-- Book cover images, uploaded by sellers or fetched from an online catalogue
+- Cover images for books added by sellers (today only the demo books have one)
 - Admin page, listing reports and user blocking
 - Wishlist with "a cheaper copy is now listed" alerts
 - Email notifications and buyer to seller chat
