@@ -19,12 +19,12 @@ function timelineHtml(status) {
   ).join('')}</ol>`;
 }
 
-function itemHtml(item, i) {
+function itemHtml(item) {
   const title = item.book
     ? `<a class="row__title" href="/book.html?id=${item.book._id}">${escapeHtml(item.title)}</a>`
     : `<span class="row__title">${escapeHtml(item.title)}</span>`;
   return `
-    <li class="row" style="--i: ${i}">
+    <li class="row">
       ${thumbHtml({ title: item.title, coverUrl: item.book?.coverUrl })}
       <div class="row__main">
         ${title}

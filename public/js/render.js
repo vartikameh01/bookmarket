@@ -2,21 +2,10 @@
 import { escapeHtml, formatPrice } from './ui.js';
 import { CONDITION_LABELS } from './shared/validate-listing.js';
 
-// cloth colours for the stand in cover, picked from the title so a book always gets the same one
-const CLOTHS = ['#2e5b4b', '#7f2414', '#2d6a73', '#9a5a3c', '#2b2823', '#5b4a6e', '#8a6a1c'];
-
-function clothFor(title) {
-  let hash = 0;
-  for (const ch of String(title)) {
-    hash = (hash * 31 + ch.codePointAt(0)) >>> 0;
-  }
-  return CLOTHS[hash % CLOTHS.length];
-}
-
-// the cloth cover always sits underneath, so a slow or broken open library image still leaves a designed cover
+// a plain cover with the title always sits underneath, so a slow or broken open library image still shows something
 export function coverHtml(book) {
   const fallback = `
-    <span class="cover-fallback" style="--cloth: ${clothFor(book.title)}" aria-hidden="true">
+    <span class="cover-fallback" aria-hidden="true">
       <span class="cover-fallback__title">${escapeHtml(book.title)}</span>
       ${book.author ? `<span class="cover-fallback__author">${escapeHtml(book.author)}</span>` : ''}
     </span>`;
@@ -56,10 +45,10 @@ export function thumbHtml(book) {
   return `<div class="row__thumb">${coverHtml(book)}</div>`;
 }
 
-export function bookCardHtml(item, i = 0) {
+export function bookCardHtml(item) {
   const offers = `${item.offerCount} offer${item.offerCount === 1 ? '' : 's'}`;
   return `
-    <a class="book-card" href="/book.html?id=${escapeHtml(item._id)}" style="--i: ${i}">
+    <a class="book-card" href="/book.html?id=${escapeHtml(item._id)}">
       <div class="book-card__cover">${coverHtml(item)}</div>
       <h3 class="book-card__title">${escapeHtml(item.title)}</h3>
       <p class="book-card__author">${escapeHtml(item.author)}</p>

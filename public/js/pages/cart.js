@@ -8,7 +8,7 @@ await requireUser();
 const container = document.querySelector('#cart');
 const noticesEl = document.querySelector('#notices');
 
-function itemHtml(item, i) {
+function itemHtml(item) {
   const quantity =
     item.stock > 1
       ? `<label class="qty"><span class="visually-hidden">Quantity of ${escapeHtml(item.title)}</span>
@@ -16,7 +16,7 @@ function itemHtml(item, i) {
            <span class="muted">of ${item.stock}</span></label>`
       : '<span class="muted">Single copy</span>';
   return `
-    <li class="row" style="--i: ${i}">
+    <li class="row">
       ${thumbHtml(item)}
       <div class="row__main">
         <a class="row__title" href="/book.html?id=${item.bookId}">${escapeHtml(item.title)}</a>

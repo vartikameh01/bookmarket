@@ -5,37 +5,27 @@ import { INDIAN_STATES, validateAddress } from '../shared/validate-address.js';
 
 await requireUser();
 
-const ticket = document.querySelector('#ticket');
+const card = document.querySelector('#profile-card');
 const detailsForm = document.querySelector('#details-form');
 const passwordForm = document.querySelector('#password-form');
 const ADDRESS_FIELDS = ['name', 'phone', 'line1', 'line2', 'city', 'state', 'pincode'];
 
 const monthYear = new Intl.DateTimeFormat('en-IN', { month: 'short', year: 'numeric' });
 
-function initials(name) {
-  const parts = name.trim().split(/\s+/);
-  return (parts[0][0] + (parts.length > 1 ? parts.at(-1)[0] : '')).toUpperCase();
-}
-
-function renderTicket(profile) {
+function renderCard(profile) {
   const { stats } = profile;
   const rating = stats.ratingCount
     ? `<span class="stars__icon" aria-hidden="true">★</span> ${stats.rating.toFixed(1)} <small>(${stats.ratingCount})</small>`
     : '<small>Not rated yet</small>';
-  ticket.innerHTML = `
-    <div class="ticket__band"><span>Bookmarket</span><span>Reader's ticket</span></div>
-    <div class="ticket__body">
-      <span class="ticket__initials" aria-hidden="true">${escapeHtml(initials(profile.name))}</span>
-      <h2 class="ticket__name">${escapeHtml(profile.name)}</h2>
-      <p class="ticket__email">${escapeHtml(profile.email)}</p>
-      <p class="ticket__stamp">Member since <strong>${monthYear.format(new Date(profile.memberSince))}</strong></p>
-    </div>
-    <dl class="ticket__stats">
+  card.innerHTML = `
+    <h2 class="profile-card__name">${escapeHtml(profile.name)}</h2>
+    <p class="profile-card__email">${escapeHtml(profile.email)}</p>
+    <p class="profile-card__since">Member since ${monthYear.format(new Date(profile.memberSince))}</p>
+    <dl class="profile-card__stats">
       <div><dt>Orders placed</dt><dd><a href="/orders.html">${stats.ordersPlaced}</a></dd></div>
       <div><dt>Books on sale</dt><dd><a href="/seller/listings.html">${stats.activeListings}</a></dd></div>
       <div><dt>As a seller</dt><dd>${rating}</dd></div>
-    </dl>
-    <p class="ticket__no">No. ${escapeHtml(String(profile._id).slice(-6).toUpperCase())}</p>`;
+    </dl>`;
 }
 
 function fillDetails(profile) {
@@ -46,12 +36,8 @@ function fillDetails(profile) {
   }
 }
 
-function flashSaved(el, text) {
+function showSaved(el, text) {
   el.textContent = text;
-  el.classList.remove('is-shown');
-  // restart the stamp animation when the same form is saved twice in a row
-  void el.offsetWidth;
-  el.classList.add('is-shown');
 }
 
 detailsForm.elements['address.state'].append(...INDIAN_STATES.map((s) => new Option(s, s)));
@@ -60,16 +46,16 @@ let profile;
 try {
   profile = await api('/profile');
 } catch (err) {
-  ticket.innerHTML = `<p class="form-error">${escapeHtml(err.message)}</p>`;
+  card.innerHTML = `<p class="form-error">${escapeHtml(err.message)}</p>`;
   await new Promise(() => {});
 }
-renderTicket(profile);
+renderCard(profile);
 fillDetails(profile);
 
 for (const form of [detailsForm, passwordForm]) {
   form.addEventListener('input', (event) => {
     clearFieldError(event.target);
-    form.querySelector('.saved-note').classList.remove('is-shown');
+    form.querySelector('.saved-note').textContent = '';
   });
 }
 
@@ -102,13 +88,13 @@ detailsForm.addEventListener('submit', async (event) => {
     const user = await api('/profile', { method: 'PATCH', body: { name, address } });
     profile = { ...profile, name: user.name, address: user.address };
     fillDetails(profile);
-    renderTicket(profile);
+    renderCard(profile);
     // the header was drawn from /auth/me before the change
     const menuName = document.querySelector('.account-menu summary');
     if (menuName) {
       menuName.textContent = user.name;
     }
-    flashSaved(document.querySelector('#details-saved'), user.address ? 'Saved' : 'Saved, address cleared');
+    showSaved(document.querySelector('#details-saved'), user.address ? 'Saved' : 'Saved, address cleared');
   } catch (err) {
     const unmatched = err.errors ? showFieldErrors(detailsForm, err.errors) : [err.message];
     formError.textContent = unmatched.join(' ');
@@ -146,7 +132,7 @@ passwordForm.addEventListener('submit', async (event) => {
   try {
     await api('/profile/password', { method: 'POST', body: { currentPassword, newPassword } });
     passwordForm.reset();
-    flashSaved(document.querySelector('#password-saved'), 'Changed');
+    showSaved(document.querySelector('#password-saved'), 'Changed');
     toast('Password changed. Use the new one next time you log in.');
   } catch (err) {
     const unmatched = err.errors ? showFieldErrors(passwordForm, err.errors) : [err.message];

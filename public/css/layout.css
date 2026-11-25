@@ -25,10 +25,8 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  backdrop-filter: blur(6px);
-  /* double rule like the top edge of a library catalogue card */
-  border-bottom: 3px double var(--ink);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
 }
 
 .site-header__inner {
@@ -66,8 +64,6 @@
   color: var(--card);
   background: var(--stamp);
   border-radius: 50%;
-  transform: rotate(-8deg);
-  box-shadow: inset 0 0 0 2px var(--stamp), inset 0 0 0 4px var(--card);
 }
 
 .brand__name {
@@ -158,7 +154,7 @@
 /* footer */
 
 .site-footer {
-  border-top: 3px double var(--ink);
+  border-top: 1px solid var(--rule);
   background: var(--paper-deep);
   font-size: 0.9rem;
   color: var(--ink-soft);

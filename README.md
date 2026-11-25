@@ -17,7 +17,7 @@ See [PLAN.md](PLAN.md) for the full design, API and timeline.
 
 The seed creates `seller1@example.com` to `seller4@example.com` and `buyer@example.com`, all with the password `demo1234`. It wipes the database first, so reseed whenever the demo data needs resetting.
 
-`server/db/seed-books.json` is already committed. Only rerun `node server/db/fetch-seed-books.js` after changing its ISBN list, and check the titles it prints, because Open Library records can be vandalized.
+`server/db/seed-books.json` holds the demo books. It was generated once from Open Library and is committed, so seeding never needs the internet.
 
 ## Report material
 

@@ -16,12 +16,12 @@ function stockLabel(listing) {
   return listing.condition === 'new' ? `${listing.quantity} in stock` : 'Single copy';
 }
 
-function rowHtml(listing, i) {
+function rowHtml(listing) {
   const { book } = listing;
   const paused = listing.status === 'paused';
   const classes = ['row', paused || listing.quantity === 0 ? 'is-muted' : '', listing._id === highlightId ? 'is-highlighted' : ''];
   return `
-    <li class="${classes.join(' ')}" style="--i: ${i}" data-id="${listing._id}">
+    <li class="${classes.join(' ')}" data-id="${listing._id}">
       ${thumbHtml(book)}
       <div class="row__main">
         <a class="row__title" href="/book.html?id=${book._id}">${escapeHtml(book.title)}</a>

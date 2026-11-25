@@ -15,12 +15,12 @@ function thumbsHtml(order) {
     .join('')}</div>`;
 }
 
-function rowHtml(order, i) {
+function rowHtml(order) {
   const count = order.items.reduce((sum, item) => sum + item.quantity, 0);
   const titles = order.items.map((item) => item.title).join(', ');
   const isNew = order.checkoutId === checkoutId;
   return `
-    <li class="row${isNew ? ' is-highlighted' : ''}" style="--i: ${i}">
+    <li class="row${isNew ? ' is-highlighted' : ''}">
       ${thumbsHtml(order)}
       <div class="row__main">
         <a class="row__title" href="/order.html?id=${order._id}">${escapeHtml(titles)}</a>

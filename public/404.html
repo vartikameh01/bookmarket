@@ -12,26 +12,12 @@
 </head>
 <body>
   <main id="main" class="page page-width lost" tabindex="-1">
-    <article class="lost-card" aria-labelledby="lost-title">
-      <p class="lost-card__call" aria-hidden="true">404<br>.B6<br>2026</p>
-      <div class="lost-card__entry">
-        <h1 id="lost-title">This page isn’t on the shelf</h1>
-        <dl class="lost-card__fields">
-          <div><dt>Title</dt><dd>The page you were looking for</dd></div>
-          <div><dt>Location</dt><dd id="lost-path">Unknown</dd></div>
-          <div><dt>Status</dt><dd>Missing, possibly borrowed and never returned</dd></div>
-        </dl>
-      </div>
-      <p class="lost-card__stamp" aria-hidden="true">Not found</p>
-    </article>
-    <p class="lost__lede">The link may be old, or the book may have been sold. Try the catalogue instead.</p>
+    <h1>Page not found</h1>
+    <p>The link may be old, or the book may have been sold. Try the catalogue instead.</p>
     <div class="lost__actions">
       <a class="btn btn--primary" href="/catalog.html">Browse books</a>
       <a class="btn" href="/">Back to the home page</a>
     </div>
   </main>
-  <script type="module">
-    document.querySelector('#lost-path').textContent = location.pathname;
-  </script>
 </body>
 </html>

@@ -27,7 +27,7 @@ function renderTabs(allOrders) {
   }).join('');
 }
 
-function rowHtml(order, i) {
+function rowHtml(order) {
   const a = order.shipping;
   const titles = order.items.map((item) => `${item.title}${item.quantity > 1 ? ` × ${item.quantity}` : ''}`).join(', ');
   const action = ACTIONS[order.status];
@@ -36,7 +36,7 @@ function rowHtml(order, i) {
     ? `<p class="sale-address">Ship to ${escapeHtml(a.name)}, ${escapeHtml(a.line1)}${a.line2 ? `, ${escapeHtml(a.line2)}` : ''}, ${escapeHtml(a.city)}, ${escapeHtml(a.state)} ${escapeHtml(a.pincode)} · ${escapeHtml(a.phone)}</p>`
     : '';
   return `
-    <li class="row" style="--i: ${i}" data-id="${order._id}">
+    <li class="row" data-id="${order._id}">
       ${thumbHtml({ title: order.items[0].title, coverUrl: order.items[0].book?.coverUrl })}
       <div class="row__main">
         <span class="row__title">${escapeHtml(titles)}</span>
@@ -80,10 +80,10 @@ async function renderSummary() {
     : '<small>No ratings yet</small>';
   summaryEl.innerHTML = `
     <dl class="stat-cards">
-      <div class="stat-card stat-card--earned" style="--i: 0"><dt>Earned</dt><dd>${formatPrice(s.earnedPaise)}</dd><small>From delivered orders</small></div>
-      <div class="stat-card stat-card--pending" style="--i: 1"><dt>Pending</dt><dd>${formatPrice(s.pendingPaise)}</dd><small>Placed or on the way</small></div>
-      <div class="stat-card" style="--i: 2"><dt>Orders</dt><dd>${s.orderCount}</dd><small>${s.toShip} to ship${s.cancelledCount ? `, ${s.cancelledCount} cancelled` : ''}</small></div>
-      <div class="stat-card" style="--i: 3"><dt>Rating</dt><dd>${rating}</dd></div>
+      <div class="stat-card stat-card--earned"><dt>Earned</dt><dd>${formatPrice(s.earnedPaise)}</dd><small>From delivered orders</small></div>
+      <div class="stat-card stat-card--pending"><dt>Pending</dt><dd>${formatPrice(s.pendingPaise)}</dd><small>Placed or on the way</small></div>
+      <div class="stat-card"><dt>Orders</dt><dd>${s.orderCount}</dd><small>${s.toShip} to ship${s.cancelledCount ? `, ${s.cancelledCount} cancelled` : ''}</small></div>
+      <div class="stat-card"><dt>Rating</dt><dd>${rating}</dd></div>
     </dl>`;
 }
 

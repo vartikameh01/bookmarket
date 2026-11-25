@@ -156,8 +156,7 @@ ecommerce/
 │   ├── server.js           # connects to mongodb, then starts the app
 │   ├── db/
 │   │   ├── connect.js      # mongoose.connect(process.env.MONGODB_URI)
-│   │   ├── fetch-seed-books.js  # one off: isbn list to seed-books.json via open library
-│   │   ├── seed-books.json
+│   │   ├── seed-books.json     # demo books, generated once from open library
 │   │   └── seed.js         # genres, ~60 real books, 4 demo sellers, ~100 listings, demo buyer, a few delivered + rated orders
 │   ├── models/
 │   │   ├── User.js
